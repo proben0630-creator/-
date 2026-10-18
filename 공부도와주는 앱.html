@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="계획, 오답 복습과 학습 기록을 한곳에서 관리하는 학생용 학습 코치 앱">
+  <meta name="theme-color" content="#10204c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="스터디온">
+  <title>스터디온 · 나만의 학습 코치</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23204bd8'/%3E%3Cpath d='M18 20h20a8 8 0 0 1 8 8v20H26a8 8 0 0 1-8-8V20Z' fill='white'/%3E%3Cpath d='M26 20v28M32 29h8M32 36h8' stroke='%23204bd8' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">
+  <link rel="manifest" href="/app.webmanifest">
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <style>
+    :root { --ink:#15213c; --muted:#667085; --line:#e3e8f3; --blue:#204bd8; --blue-2:#eaf0ff; --mint:#dff8ef; --surface:#fff; --bg:#f5f7fc; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--bg); font-family:Pretendard,"Noto Sans KR",system-ui,sans-serif; font-size:16px; line-height:1.5; }
+    button { font:inherit; }
+    .app { min-height:100vh; display:grid; grid-template-columns:240px minmax(0,1fr); }
+    aside { padding:28px 20px; background:#10204c; color:white; }
+    .brand { display:flex; gap:11px; align-items:center; margin:0 8px 34px; font-size:1.25rem; font-weight:800; }
+    .mark { display:grid; place-items:center; width:38px; height:38px; border-radius:12px; background:#fff; color:var(--blue); }
+    nav { display:grid; gap:8px; }
+    .nav { width:100%; border:0; border-radius:12px; padding:12px 14px; color:#cbd5f5; background:transparent; text-align:left; cursor:pointer; }
+    .nav:hover, .nav.active { color:#fff; background:#25396f; }
+    .aside-note { margin-top:32px; padding:16px; border:1px solid #31467d; border-radius:14px; color:#cbd5f5; font-size:.875rem; }
+    .install-app { width:100%; margin-top:14px; border:1px solid #5b76c7; border-radius:12px; padding:11px; color:#fff; background:#25396f; font-weight:800; cursor:pointer; }
+    main { width:100%; min-width:0; padding:34px clamp(20px,4vw,56px) 60px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:30px; }
+    h1 { margin:0 0 5px; font-size:clamp(1.7rem,3vw,2.25rem); line-height:1.2; }
+    .date, .muted { color:var(--muted); }
+    .profile { border:0; padding:0; cursor:pointer; overflow:hidden; flex-shrink:0; width:44px; height:44px; display:grid; place-items:center; border-radius:50%; background:var(--blue-2); color:var(--blue); font-weight:800; }
+    .view { display:none; }
+    .view.active { display:block; }
+    .hero { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr); gap:18px; margin-bottom:18px; }
+    .card { background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:24px; box-shadow:0 8px 28px rgba(33,53,103,.06); }
+    .focus { color:white; background:linear-gradient(135deg,#204bd8,#173896); border:0; }
+    .eyebrow { margin:0 0 10px; color:#9fb6ff; font-size:.875rem; font-weight:700; }
+    .focus h2 { margin:0 0 6px; font-size:1.55rem; }
+    .focus p { margin:0 0 22px; color:#dce5ff; }
+    .primary { border:0; border-radius:12px; padding:11px 16px; color:var(--blue); background:white; font-weight:800; cursor:pointer; }
+    .metric { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .ring { flex:0 0 86px; width:86px; height:86px; display:grid; place-items:center; border-radius:50%; background:conic-gradient(var(--blue) 0 68%,#e7ebf4 68%); }
+    .ring::after { content:attr(data-percent); width:66px; height:66px; display:grid; place-items:center; border-radius:50%; background:#fff; font-weight:800; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+    .feature { min-height:180px; display:flex; flex-direction:column; }
+    .icon { width:42px; height:42px; display:grid; place-items:center; border-radius:12px; background:var(--blue-2); font-size:1.2rem; }
+    .feature h3 { margin:18px 0 6px; }
+    .feature p { margin:0 0 20px; color:var(--muted); font-size:.925rem; }
+    .link { margin-top:auto; border:0; padding:0; color:var(--blue); background:transparent; text-align:left; font-weight:750; cursor:pointer; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; margin-bottom:18px; }
+    .section-head h2 { margin:0 0 4px; font-size:1.45rem; }
+    .placeholder { min-height:max(360px,calc(100dvh - 250px)); display:grid; place-items:center; text-align:center; }
+    .placeholder .icon { margin:auto; width:58px; height:58px; font-size:1.55rem; }
+    .placeholder h3 { margin:18px 0 6px; }
+    .placeholder p { max-width:460px; margin:0; color:var(--muted); }
+    .soon { display:inline-block; margin-top:18px; padding:7px 11px; border-radius:999px; background:var(--mint); color:#086948; font-size:.85rem; font-weight:800; }
+    .flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+    .step { padding:16px; border:1px solid var(--line); border-radius:16px; background:#fff; }
+    .step-no { display:grid; place-items:center; width:30px; height:30px; margin-bottom:12px; border-radius:50%; color:var(--blue); background:var(--blue-2); font-weight:800; }
+    .step strong { display:block; margin-bottom:3px; }
+    .step span { color:var(--muted); font-size:.875rem; }
+    .workspace { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:18px; }
+    .upload-box { display:grid; place-items:center; min-height:210px; padding:28px; border:2px dashed #b9c7ee; border-radius:18px; background:#f8faff; text-align:center; }
+    .upload-box h3 { margin:12px 0 4px; }
+    .upload-box p { margin:0 0 16px; color:var(--muted); }
+    .upload-label { display:inline-block; padding:11px 16px; border-radius:12px; color:#fff; background:var(--blue); font-weight:800; cursor:pointer; }
+    .upload-label.secondary { color:var(--blue); background:var(--blue-2); }
+    .hidden-input { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+    .file-name { min-height:24px; margin-top:12px; color:var(--blue); font-weight:700; }
+    .privacy { margin-top:18px; padding:16px; border-left:4px solid #2ca879; border-radius:10px; background:#effbf6; color:#245746; }
+    .check { display:flex; align-items:flex-start; gap:10px; margin-top:14px; color:var(--muted); font-size:.925rem; }
+    .check input { flex:0 0 18px; margin-top:5px; width:18px; height:18px; accent-color:var(--blue); }
+    .disabled-note { margin-top:18px; padding:14px; border-radius:12px; color:var(--muted); background:#f1f3f8; text-align:center; font-weight:700; }
+    @media (max-width:850px) { .app{grid-template-columns:1fr} aside{padding:16px 18px}.brand{margin:0 0 14px} nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:visible}.nav{white-space:normal}.aside-note{display:none}.hero,.grid,.workspace{grid-template-columns:1fr}.flow{grid-template-columns:repeat(2,minmax(0,1fr))} main{padding-top:24px} }
+    @media (max-width:520px) { .flow{grid-template-columns:1fr} }
+    .profile img, .avatar-preview img { width:100%; height:100%; object-fit:cover; }
+    button:focus-visible, input:focus-visible { outline:3px solid #7196ff; outline-offset:4px; }
+    .profile-layout { display:grid; grid-template-columns:minmax(220px,.65fr) minmax(0,1.35fr); gap:32px; }
+    .profile-photo { display:flex; flex-direction:column; align-items:center; gap:16px; padding:24px; border-radius:16px; background:#f8faff; text-align:center; }
+    .avatar-preview { width:128px; height:128px; border-radius:50%; overflow:hidden; display:grid; place-items:center; background:var(--blue-2); color:var(--blue); font-size:2.5rem; font-weight:800; }
+    .photo-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+    .photo-actions button { border:0; }
+    .profile-fields { display:grid; align-content:start; gap:20px; }
+    .field { display:grid; gap:8px; font-weight:700; }
+    .form-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
+    .field input { width:100%; min-width:0; padding:12px 14px; border:1px solid #bdc8de; border-radius:12px; background:white; color:var(--ink); font:inherit; }
+    .save-profile { justify-self:start; background:var(--blue); color:white; }
+    .save-profile:disabled { opacity:.6; cursor:wait; }
+    .profile-message { min-height:24px; margin:0; color:#086948; overflow-wrap:anywhere; }
+    .profile-message.error { color:#b42318; }
+    .profile-hint { font-size:.875rem; color:var(--muted); margin:0; }
+    @media (max-width:850px) { .profile-layout{grid-template-columns:1fr} .placeholder{min-height:360px} .nav{width:100%;padding:12px 8px;text-align:center} aside{min-width:0} }
+    /* Keep intrinsic text and controls inside each responsive grid track. */
+    header > div, .card, .hero > *, .workspace > *, .profile-layout > *,
+    .upload-box > div, .metric > div:first-child, .section-head > div { min-width:0; }
+    h1, h2, h3, p, .file-name, .privacy, .check, .disabled-note,
+    .section-head, .step, .nav, .link { overflow-wrap:anywhere; }
+    button, .upload-label { max-width:100%; white-space:normal; }
+    .upload-label { min-height:44px; }
+    .link { min-height:44px; display:flex; align-items:center; }
+    .field input { max-width:100%; min-height:48px; }
+    .upload-box:focus-within { outline:3px solid #7196ff; outline-offset:3px; }
+    @media (min-width:851px) and (max-width:1100px) {
+      .hero, .workspace { grid-template-columns:1fr; }
+      .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (min-width:521px) and (max-width:850px) {
+      .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width:520px) {
+      nav { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      main { padding:24px 16px 32px; }
+      header { gap:12px; align-items:flex-start; margin-bottom:24px; }
+      h1 { font-size:1.65rem; }
+      .card { padding:18px; border-radius:16px; }
+      .upload-box { padding:20px 12px; }
+      .profile-photo { padding:20px 12px; }
+      .profile-layout { gap:24px; }
+      .metric { gap:12px; }
+      .save-profile { width:100%; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    [hidden] { display:none !important; }
+    .study-card { margin-bottom:18px; }
+    .exam-setup { display:grid; gap:18px; margin-bottom:18px; }
+    .exam-setup-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+    .exam-availability { display:flex; flex-wrap:wrap; gap:8px; }
+    .exam-availability label { display:flex; gap:6px; align-items:center; padding:8px 10px; border:1px solid #d5def2; border-radius:10px; cursor:pointer; }
+    .topic-list { display:grid; gap:10px; }
+    .topic-row { display:grid; grid-template-columns:minmax(0,1fr) 112px auto; gap:10px; align-items:end; padding:12px; background:#f8faff; border:1px solid var(--line); border-radius:12px; }
+    .schedule-summary { margin:14px 0 8px; padding:14px; border-radius:12px; background:#effbf6; color:#245746; }
+    .schedule-summary.level-high { background:#fff0ed; color:#9b311e; }
+    .schedule-summary.level-mid { background:#fff8e6; color:#775500; }
+    .schedule-summary.level-low { background:#effbf6; color:#245746; }
+    .schedule-list { display:grid; gap:10px; margin:0; padding:0; list-style:none; }
+    .schedule-item { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 16px; padding:14px; border-top:1px solid var(--line); }
+    .schedule-item strong { overflow-wrap:anywhere; }
+    .schedule-item span { color:var(--muted); font-size:.9rem; }
+    .weekly-slots { display:grid; grid-template-columns:repeat(7,minmax(110px,1fr)); gap:10px; margin-top:10px; }
+    .weekly-slot { display:grid; grid-template-columns:auto 1fr; gap:8px; align-items:center; padding:10px; border:1px solid var(--line); border-radius:12px; background:#f8faff; }
+    .weekly-slot .slot-times { grid-column:1 / -1; display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .weekly-slot input[type=time] { width:100%; min-width:0; padding:8px; border:1px solid #bdc8de; border-radius:8px; font:inherit; }
+    @media(max-width:850px){.exam-setup-grid{grid-template-columns:1fr}.topic-row{grid-template-columns:minmax(0,1fr) 112px auto}.weekly-slots{grid-template-columns:repeat(4,minmax(110px,1fr))}}
+    @media(max-width:600px){.weekly-slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:520px){.topic-row{grid-template-columns:1fr}.topic-row .study-button{width:100%}}
+    .task-form { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:end; gap:16px; margin-bottom:14px; }
+    .task-actions, .date-actions { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+    .study-button { min-height:44px; padding:10px 14px; border:1px solid #d5def2; border-radius:10px; background:var(--blue-2); color:var(--blue); cursor:pointer; font-weight:700; }
+    .study-button.filled { background:var(--blue); color:white; border-color:var(--blue); }
+    .study-list-head { display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between; }
+    .task-list { padding:0; margin:16px 0 0; list-style:none; }
+    .task-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; padding:20px 0; border-top:1px solid var(--line); }
+    .task-check { min-width:0; display:flex; align-items:center; gap:12px; cursor:pointer; min-height:44px; }
+    .task-check input { width:22px; height:22px; flex:0 0 22px; accent-color:var(--blue); }
+    .task-check span { overflow-wrap:anywhere; }
+    .task-time { align-self:center; font-variant-numeric:tabular-nums; color:var(--muted); font-size:.9rem; }
+    .task-row .task-actions { grid-column:1 / -1; }
+    .is-done .task-check span { text-decoration:line-through; color:var(--muted); }
+    .timer-panel { background:#edf3ff; }
+    .timer-panel .eyebrow { color:var(--blue); }
+    .timer-panel h3 { overflow-wrap:anywhere; }
+    .timer-clock { font-size:clamp(2rem,5vw,3.5rem); font-weight:800; font-variant-numeric:tabular-nums; margin:12px 0; }
+    .timer-panel .profile-hint { margin-top:16px; }
+    .study-card .profile-message { margin:12px 0; }
+    @media (max-width:600px) { .task-form,.task-row,.form-row{grid-template-columns:minmax(0,1fr)} .task-form .task-actions{width:100%} .task-form .filled{flex:1} .date-actions{width:100%}.date-actions .field{min-width:0;flex:1}.task-time{padding-left:34px} }
+    .field select { width:100%; min-width:0; min-height:48px; padding:12px; border:1px solid #bdc8de; border-radius:12px; background:white; color:var(--ink); font:inherit; }
+    select:focus-visible { outline:3px solid #7196ff; outline-offset:4px; }
+    .task-form { grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr); }
+    .task-form > .task-actions { grid-column:1 / -1; }
+    .report-heading { flex-wrap:wrap; gap:16px; }
+    .range-tabs { display:flex; flex-wrap:wrap; gap:8px; }
+    .range-tabs button.active { color:#fff; background:var(--blue); border-color:var(--blue); }
+    .report-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-bottom:18px; }
+    .report-metrics strong { font-size:clamp(1.3rem,2.5vw,2rem); overflow-wrap:anywhere; }
+    .report-metrics p { margin-top:0; }
+    .report-columns { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-bottom:18px; }
+    .report-day { display:grid; grid-template-columns:48px minmax(0,1fr) minmax(58px,auto); gap:10px; align-items:center; margin:16px 0; font-size:.875rem; }
+    .report-day > span:last-child { text-align:right; overflow-wrap:anywhere; }
+    .report-track { height:12px; background:var(--blue-2); border-radius:8px; overflow:hidden; }
+    .report-bar { height:100%; background:var(--blue); border-radius:8px; }
+    .report-subject { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 16px; padding:14px 0; border-top:1px solid var(--line); overflow-wrap:anywhere; }
+    .report-subject > * { min-width:0; }
+    .report-subject span { color:var(--muted); font-size:.9rem; }
+    @media(max-width:1100px){ .report-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.report-columns{grid-template-columns:minmax(0,1fr)} }
+    @media(max-width:600px){ .task-form{grid-template-columns:minmax(0,1fr)}.report-metrics{gap:10px}.report-metrics .card{padding:14px}.report-day{gap:6px} }
+    .review-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+    #review-fields{border:0;padding:0;margin:0;min-width:0;display:grid;gap:16px}
+    .review-form-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);gap:16px}
+    .review-form-grid>*{min-width:0}
+    .field textarea{min-width:0;max-width:100%;width:100%;padding:12px;border:1px solid #bdc8de;border-radius:12px;font:inherit;color:var(--ink);resize:vertical}
+    textarea:focus-visible,summary:focus-visible{outline:3px solid #7196ff;outline-offset:4px}
+    input[type=file]{max-width:100%;font-size:.9rem}
+    .review-preview{max-width:100%;max-height:320px;object-fit:contain;justify-self:start;border-radius:12px}
+    .review-list-head{margin:24px 0 16px}
+    .review-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:20px}
+    .review-item{min-width:0;display:flex;flex-direction:column;align-items:stretch}
+    .review-item h3{margin:8px 0;overflow-wrap:anywhere}.review-item .task-actions{margin-top:auto}
+    .review-thumb{width:100%;height:180px;object-fit:contain;background:#f5f7fc;border-radius:10px;margin-bottom:14px}
+    .review-tag{font-size:.85rem;color:var(--blue);margin:0}
+    #review-dialog{width:min(800px,calc(100% - 32px));max-height:90dvh;overflow:auto;padding:24px;border:1px solid var(--line);border-radius:20px;color:var(--ink);box-sizing:border-box}
+    #review-dialog::backdrop{background:rgba(16,32,76,.55)}
+    .review-dialog-head{display:flex;gap:12px;align-items:start;justify-content:space-between}.review-dialog-head h2{min-width:0;overflow-wrap:anywhere;margin:0}.review-dialog-head button{flex-shrink:0}
+    .review-detail-photo{display:block;max-width:100%;height:auto;margin:16px auto}
+    #review-note-reveal{margin:20px 0;padding:16px;background:#f5f7fc;border-radius:12px}#review-note-reveal summary{cursor:pointer;min-height:32px}#review-detail-reason{white-space:pre-wrap;overflow-wrap:anywhere}
+    #review-save:disabled,.study-button:disabled{opacity:.55;cursor:not-allowed}
+    .home-review{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;background:#eef5ff}.home-review p{margin:0}
+    @media(max-width:1100px){.review-list{grid-template-columns:repeat(2,minmax(0,1fr))}.review-form-grid{grid-template-columns:minmax(0,1fr)} }
+    @media(max-width:600px){.review-list,.review-metrics{grid-template-columns:minmax(0,1fr)}#review-dialog{padding:18px}.review-list-head .field{width:100%}}
+
+    .grade-help{margin:16px 0;line-height:1.7}.grade-rows{display:grid;gap:12px;margin:20px 0}
+    .grade-row{display:grid;grid-template-columns:40px minmax(100px,.8fr) minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end;padding:16px;background:#f8faff;border:1px solid var(--line);border-radius:14px}
+    .grade-row>*{min-width:0}.grade-row>strong{align-self:center}.grade-row>button{margin-bottom:2px}
+    .grade-metrics{grid-template-columns:repeat(3,minmax(0,1fr));padding:16px 0}
+    .grade-answer{border-top:1px solid var(--line);padding:18px 0;overflow-wrap:anywhere}.grade-answer h4{margin:0 0 10px}.grade-answer .field{margin:14px 0}.grade-ok{color:#086948}.grade-miss{color:#915700}
+    @media(max-width:1100px){.grade-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.grade-row>strong{grid-column:1 / -1}.grade-row>button{justify-self:start}.grade-metrics strong{font-size:1.4rem}}
+    @media(max-width:520px){.grade-row{grid-template-columns:minmax(0,1fr)}.grade-metrics{grid-template-columns:minmax(0,1fr);gap:6px}.grade-metrics p{margin:4px 0}.grade-answer .study-button{width:100%}}
+
+  
+    #ocr-panel{margin-bottom:20px;min-width:0}#ocr-panel summary{cursor:pointer;line-height:1.6;overflow-wrap:anywhere}
+    #ocr-panel .extra-stack{display:grid;gap:16px;margin-top:16px;min-width:0}#ocr-panel p{margin:0;line-height:1.7;overflow-wrap:anywhere}
+    #ocr-panel .extra-stack>*{min-width:0;max-width:100%}#ocr-panel progress{width:100%;height:12px}#ocr-panel input[type=file]{width:100%;min-width:0}
+    #ocr-preview{object-fit:contain;max-height:320px}#ocr-panel button{white-space:normal;overflow-wrap:anywhere}#ocr-panel .check{align-items:flex-start;line-height:1.6}
+    @media(max-width:520px){#ocr-panel .task-actions{flex-wrap:wrap}#ocr-panel .task-actions button{flex:1 1 100%}}
+
+    .habit-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr);gap:18px}.habit-form{display:grid;gap:14px}.habit-question{padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff}.habit-question legend{font-weight:750;padding:0 4px}.habit-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.habit-options label{display:flex;align-items:center;gap:7px;min-height:38px;padding:6px 10px;border:1px solid #d5def2;border-radius:10px;cursor:pointer}.habit-options input{accent-color:var(--blue)}.habit-progress{margin:0;color:var(--blue);font-weight:800}.habit-result{align-self:start;display:grid;gap:14px;background:#fff;border:2px solid #b7caf8}.habit-result h3{color:#12224b}.habit-score{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.habit-score article{padding:14px;border:1px solid #a8c0f3;border-radius:12px;background:#dce8ff;color:#12224b;font-weight:700}.habit-score strong{display:block;font-size:1.45rem;margin-top:4px}.habit-action{margin:0;padding:14px;border-radius:12px;background:#e5f7ee;color:#075b3d;font-weight:700;line-height:1.65}.habit-result[hidden]{display:none}.habit-message{min-height:24px;margin:0;color:#086948}.habit-message.error{color:#b42318}@media(max-width:850px){.habit-layout{grid-template-columns:minmax(0,1fr)}}@media(max-width:520px){.habit-score{grid-template-columns:minmax(0,1fr)}.habit-options label{flex:1 1 100%}}
+
+  
+.photo-upload{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:36px 20px;border:2px dashed #a6b3ea;border-radius:18px;background:#f7f9ff;cursor:pointer;overflow-wrap:anywhere}.photo-upload:focus-within{outline:3px solid #304ad4;outline-offset:3px}.photo-upload strong{font-size:1.25rem}.photo-upload input{max-width:100%;min-width:0}.photo-upload:hover{background:#eef2ff}#photo-form{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}#photo-form>*{min-width:0;max-width:100%}#photo-image{display:block;max-width:100%;max-height:500px;object-fit:contain;margin:0 auto 16px}#photo-result-body p{white-space:pre-wrap;overflow-wrap:anywhere}#photo-legacy details{padding:16px 0}#photo-legacy p{overflow-wrap:anywhere}#photo-form [hidden]{display:none!important}@media(max-width:520px){#photo-form .task-actions{flex-wrap:wrap}#photo-form .task-actions button{flex:1 1 100%;white-space:normal}}
+</style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand"><span class="mark">S</span>스터디온</div>
+      <nav aria-label="주요 메뉴">
+        <button class="nav active" data-view="home">홈</button>
+        <button class="nav" data-view="plan">공부 계획</button>
+        <button class="nav" data-view="timetable">공부 시간표</button>
+        <button class="nav" data-view="review">오답 복습</button>
+        <button class="nav" data-view="habit">공부 습관</button>
+        <button class="nav" data-view="report">학습 리포트</button>
+        <button class="nav" data-view="profile">프로필 정보</button>
+      </nav>
+      <div class="aside-note">공부 계획을 만든 뒤, 공부 시간표에서 오늘의 계획을 실행해 보세요.</div>
+      <button type="button" class="install-app" id="install-app" hidden>스터디온 앱 설치</button>
+    </aside>
+
+    <main>
+      <header>
+        <div><h1 id="page-title">오늘도 한 걸음씩!</h1><div class="date">9월 20일 · 오늘의 학습 현황</div></div>
+        <button type="button" class="profile" id="profile-button" data-go="profile" aria-label="프로필 정보 수정" title="프로필 정보">김</button>
+      </header>
+
+      <section class="view active" id="home">
+        <div class="hero">
+          <article class="card focus">
+            <p class="eyebrow">오늘의 첫 번째 목표</p>
+            <h2 id="focus-title">오늘 할 일을 하나 정해 볼까요?</h2>
+            <p id="focus-description">작은 목표 1~3개부터 시작해 보세요.</p>
+            <button class="primary" id="focus-action">오늘 할 일 추가</button>
+          </article>
+          <article class="card metric">
+            <div><strong>오늘의 달성률</strong><p class="muted" id="today-progress">목표 0개 중 0개 완료</p></div>
+            <div class="ring" data-percent="0%" aria-label="달성률 0퍼센트"></div>
+          </article>
+        </div>
+        <div class="card home-review"><div><strong>오늘의 오답 복습</strong><p class="muted" id="home-review-count">오답 기록을 불러오는 중이에요.</p></div><button class="study-button" data-go="review">오답 복습하기 →</button></div>
+        <div class="grid">
+          <article class="card feature"><span class="icon">🗓</span><h3>공부 계획</h3><p>시험 범위와 가능한 시간을 입력해 학습 계획을 만들어요.</p><button class="link" data-go="plan">계획 만들기 →</button></article>
+          <article class="card feature"><span class="icon">✓</span><h3>공부 습관</h3><p>나의 공부 습관을 진단하고 작은 목표를 정해요.</p><button class="link" data-go="habit">습관 진단 →</button></article>
+          <article class="card feature"><span class="icon">▥</span><h3>학습 리포트</h3><p>공부 시간과 목표 달성 변화를 한눈에 확인해요.</p><button class="link" data-go="report">리포트 보기 →</button></article>
+        </div>
+      </section>
+
+      <section class="view" id="plan">
+        <div class="section-head"><div><h2>공부 계획</h2><span class="muted">시험 범위와 가능한 시간을 넣으면, 난이도를 반영한 공부 계획을 만들어요.</span></div></div>
+        <section class="card exam-setup" aria-labelledby="exam-setup-title">
+          <div><h3 id="exam-setup-title">시험 공부 세팅</h3><p class="muted">단원 이름은 목차를 보고 직접 적어 주세요. 저장한 계획은 이 브라우저에 보관돼요.</p></div>
+          <form id="exam-form">
+            <div class="exam-setup-grid">
+              <label class="field" for="exam-name">시험 이름<input id="exam-name" maxlength="80" required placeholder="예: 2학기 중간고사"></label>
+              <label class="field" for="exam-subject">과목<select id="exam-subject"><option>수학</option><option>국어</option><option>영어</option><option>과학</option><option>사회</option><option>기타</option></select></label>
+              <label class="field" for="exam-date">시험일<input id="exam-date" type="date" required></label>
+              <label class="field" for="exam-start">공부 시작일<input id="exam-start" type="date" required></label>
+            </div>
+            <div class="field"><span>일주일 공부 가능 시간</span><p class="profile-hint">공부할 요일을 체크하고, 그날 실제로 가능한 시작·종료 시간을 입력하세요.</p><div class="weekly-slots" id="exam-days">
+              <label class="weekly-slot"><span><input type="checkbox" value="1" checked> 월</span><span class="slot-times"><input type="time" value="18:00" aria-label="월요일 시작 시간"><input type="time" value="21:00" aria-label="월요일 종료 시간"></span></label>
+              <label class="weekly-slot"><span><input type="checkbox" value="2" checked> 화</span><span class="slot-times"><input type="time" value="18:00" aria-label="화요일 시작 시간"><input type="time" value="21:00" aria-label="화요일 종료 시간"></span></label>
+              <label class="weekly-slot"><span><input type="checkbox" value="3" checked> 수</span><span class="slot-times"><input type="time" value="18:00" aria-label="수요일 시작 시간"><input type="time" value="21:00" aria-label="수요일 종료 시간"></span></label>
+              <label class="weekly-slot"><span><input type="checkbox" value="4" checked> 목</span><span class="slot-times"><input type="time" value="18:00" aria-label="목요일 시작 시간"><input type="time" value="21:00" aria-label="목요일 종료 시간"></span></label>
+              <label class="weekly-slot"><span><input type="checkbox" value="5" checked> 금</span><span class="slot-times"><input type="time" value="18:00" aria-label="금요일 시작 시간"><input type="time" value="21:00" aria-label="금요일 종료 시간"></span></label>
+              <label class="weekly-slot"><span><input type="checkbox" value="6"> 토</span><span class="slot-times"><input type="time" value="10:00" aria-label="토요일 시작 시간"><input type="time" value="12:00" aria-label="토요일 종료 시간"></span></label>
+              <label class="weekly-slot"><span><input type="checkbox" value="0"> 일</span><span class="slot-times"><input type="time" value="10:00" aria-label="일요일 시작 시간"><input type="time" value="12:00" aria-label="일요일 종료 시간"></span></label>
+            </div></div>
+            <div class="study-list-head"><h3>시험 범위와 난이도</h3><button class="study-button" id="add-topic" type="button">단원 추가</button></div>
+            <p class="profile-hint">상은 더 많은 시간을 배정하고 먼저 공부해요. 단원을 추가한 뒤 시간표를 생성하세요.</p>
+            <div class="topic-list" id="topic-list"></div>
+            <div class="task-actions"><button class="study-button filled" type="submit">시간표 만들기</button><button class="study-button" id="clear-exam" type="button">새 시험 계획</button></div>
+            <p id="exam-status" class="profile-message" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+      </section>
+      <section class="view" id="timetable">
+        <div class="section-head"><div><h2>공부 시간표</h2><span class="muted">오늘 해야 할 공부만 확인하고, 바로 시작해요.</span></div></div>
+        <section id="exam-schedule" class="card study-card" hidden><div class="study-list-head"><div><h3 id="schedule-title">생성된 시간표</h3><p id="schedule-summary" class="schedule-summary"></p></div><button class="study-button" id="rebalance-schedule" type="button">진행 상황 반영해 조정</button></div><div class="date-actions"><button class="study-button" id="schedule-prev" type="button">← 이전 날짜</button><strong id="schedule-date" aria-live="polite"></strong><button class="study-button" id="schedule-next" type="button">다음 날짜 →</button><button class="study-button filled" id="add-schedule-tasks" type="button">이 날 할 일에 추가</button></div><p id="schedule-empty" class="muted" hidden>이 날에는 공부 계획이 없어요.</p><ul class="schedule-list" id="schedule-list"></ul></section>
+        <section class="card study-card" aria-labelledby="reminder-title"><h3 id="reminder-title">공부 알림</h3><p class="muted">오늘 시간표 중 다음 공부가 시작되기 1시간 전에 알려드려요. 알림은 이 사이트가 열려 있을 때 작동해요.</p><div class="task-actions"><button class="study-button" id="enable-reminders" type="button">알림 켜기</button><button class="study-button" id="test-reminder" type="button" hidden>테스트 알림 보내기</button><button class="study-button" id="disable-reminders" type="button" hidden>알림 끄기</button></div><p id="reminder-status" class="profile-message" role="status" aria-live="polite"></p></section>
+        <div class="section-head"><div><h2>오늘의 공부 실행</h2><span class="muted">시간표를 추가했거나 직접 만든 할 일을 타이머로 실행하고 기록해요.</span></div></div>
+        <div class="card study-card">
+          <form id="task-form" class="task-form"><label class="field" for="task-title">오늘 할 일<input id="task-title" maxlength="120" required placeholder="예: 수학 오답 5문제 다시 풀기" autocomplete="off"></label><label class="field" for="task-subject">과목<select id="task-subject"><option>미분류</option><option>수학</option><option>국어</option><option>영어</option><option>과학</option><option>사회</option><option>기타</option></select></label><label class="field" for="task-minutes">예상 시간 (분)<input id="task-minutes" type="number" min="1" max="1440" step="1" placeholder="선택 입력"></label><div class="task-actions"><button class="study-button filled" id="task-submit" type="submit">할 일 추가</button><button class="study-button" id="cancel-edit" type="button" hidden>수정 취소</button></div></form>
+          <p class="profile-hint">하루 1~3개부터 시작해요. 기록은 이 브라우저에 자동 저장돼요.</p>
+          <p id="study-status" class="profile-message" role="status" aria-live="polite"></p><button class="study-button" id="undo-delete" hidden type="button">삭제 되돌리기</button>
+        </div>
+        <div class="card study-card timer-panel" id="timer-panel" hidden><p class="eyebrow">집중하는 중</p><h3 id="timer-task"></h3><div id="timer-clock" class="timer-clock" role="timer" aria-label="누적 공부 시간">00:00:00</div><div class="task-actions"><button class="study-button" id="pause-timer" type="button">일시정지</button><button class="study-button filled" id="finish-timer" type="button">공부 완료</button></div><p class="profile-hint">새로고침하거나 화면을 닫아도 계속 측정돼요. 쉴 때는 일시정지를 눌러 주세요. 시간은 할 일을 만든 날짜에 기록돼요.</p></div>
+        <div class="card study-card"><div class="study-list-head"><h3 id="list-summary">오늘의 할 일</h3><div class="date-actions"><label class="field" for="task-date">기록 날짜<input type="date" id="task-date"></label><button class="study-button" id="show-today" type="button">오늘</button></div></div><p class="muted" id="task-empty">아직 할 일이 없어요.</p><ul id="task-list" class="task-list"></ul></div>
+      </section>
+      <section class="view" id="habit"><div class="section-head"><div><h2>공부 습관</h2><span class="muted">6문항으로 지금의 습관을 점검하고, 오늘의 한 가지 행동을 정해요.</span></div></div><div class="habit-layout"><form id="habit-form" class="card habit-form"><fieldset class="habit-question"><legend>1. 공부할 시간을 미리 정하나요?</legend><div class="habit-options"><label><input type="radio" name="plan" value="2" required>대부분 정한다</label><label><input type="radio" name="plan" value="1">가끔 정한다</label><label><input type="radio" name="plan" value="0">거의 정하지 않는다</label></div></fieldset><fieldset class="habit-question"><legend>2. 할 일을 작은 단위로 나누나요?</legend><div class="habit-options"><label><input type="radio" name="plan" value="2" required>대부분 한다</label><label><input type="radio" name="plan" value="1">가끔 한다</label><label><input type="radio" name="plan" value="0">거의 안 한다</label></div></fieldset><fieldset class="habit-question"><legend>3. 한 번 시작하면 25분 이상 집중하나요?</legend><div class="habit-options"><label><input type="radio" name="focus" value="2" required>대부분 가능하다</label><label><input type="radio" name="focus" value="1">가끔 가능하다</label><label><input type="radio" name="focus" value="0">어렵다</label></div></fieldset><fieldset class="habit-question"><legend>4. 공부 중 휴대폰 알림을 끄나요?</legend><div class="habit-options"><label><input type="radio" name="focus" value="2" required>항상 끈다</label><label><input type="radio" name="focus" value="1">가끔 끈다</label><label><input type="radio" name="focus" value="0">대부분 켜 둔다</label></div></fieldset><fieldset class="habit-question"><legend>5. 틀린 문제를 다시 보나요?</legend><div class="habit-options"><label><input type="radio" name="review" value="2" required>며칠 안에 다시 본다</label><label><input type="radio" name="review" value="1">가끔 다시 본다</label><label><input type="radio" name="review" value="0">거의 다시 안 본다</label></div></fieldset><fieldset class="habit-question"><legend>6. 공부가 끝난 뒤 오늘 한 일을 확인하나요?</legend><div class="habit-options"><label><input type="radio" name="review" value="2" required>대부분 확인한다</label><label><input type="radio" name="review" value="1">가끔 확인한다</label><label><input type="radio" name="review" value="0">거의 확인 안 한다</label></div></fieldset><div class="task-actions"><button class="study-button filled" type="submit">습관 진단하기</button><button class="study-button" id="habit-reset" type="button">다시 하기</button></div><p id="habit-message" class="habit-message" role="status" aria-live="polite"></p></form><aside id="habit-result" class="card habit-result" hidden><div><p class="eyebrow">나의 습관 결과</p><h3 id="habit-title">진단 결과</h3><p id="habit-summary" class="muted"></p></div><div class="habit-score"><article><span>계획</span><strong id="habit-plan">0/4</strong></article><article><span>집중</span><strong id="habit-focus">0/4</strong></article><article><span>복습</span><strong id="habit-review">0/4</strong></article></div><p class="habit-action" id="habit-action"></p></aside></div></section>
+      <section class="view" id="report">
+<div class="section-head report-heading"><div><h2>나의 학습 리포트</h2><p class="muted" id="report-period"></p></div><div class="range-tabs" aria-label="리포트 조회 기간"><button type="button" class="study-button" data-report-range="today">오늘</button><button type="button" class="study-button filled active" data-report-range="week">이번 주</button><button type="button" class="study-button" data-report-range="all">전체</button><select id="report-range" hidden><option value="today">오늘</option><option value="week" selected>이번 주</option><option value="all">전체</option></select></div></div>
+<div class="report-metrics"><article class="card"><p class="muted">공부 시간</p><strong id="report-time">0초</strong></article><article class="card"><p class="muted">완료한 목표</p><strong id="report-done">0 / 0개</strong></article><article class="card"><p class="muted">목표 달성률</p><strong id="report-percent">0%</strong></article><article class="card"><p class="muted">예상 공부 시간</p><strong id="report-planned">0분</strong></article><article class="card"><p class="muted">시간표 이행률</p><strong id="report-schedule">0 / 0개</strong><p class="profile-hint" id="report-schedule-detail">시간표를 만들면 표시돼요.</p></article></div>
+<p class="muted" id="report-empty">아직 기록이 없어요. 공부 계획에서 첫 목표를 추가해 보세요.</p>
+<div class="report-columns"><article class="card"><h3>날짜별 공부 시간</h3><div id="report-days"></div><p class="profile-hint" id="report-comparison"></p></article><article class="card"><h3>과목별 기록</h3><p class="muted" id="report-subject-empty">과목별 기록이 아직 없어요.</p><ul class="task-list" id="report-subjects"></ul></article></div>
+<article class="card study-card"><h3>완료한 목표</h3><p class="muted" id="report-completed-empty">완료 체크한 목표가 여기에 나타나요.</p><ul class="task-list" id="report-completed"></ul></article>
+<p class="profile-hint">1단계 기록과 동일하게, 공부 시간과 완료 상태는 할 일을 만든 날짜 기준으로 집계해요. 진행 중인 타이머도 포함돼요. 기존 기록은 ‘미분류’로 표시하며, 삭제한 할 일은 통계에서 제외돼요.</p>
+</section>
+      <section class="view" id="profile" aria-labelledby="profile-heading">
+        <div class="section-head"><div><h2 id="profile-heading">프로필 정보</h2><span class="muted">나의 이름, 생년월일과 프로필 사진을 수정해요.</span></div></div>
+        <form class="card profile-layout" id="profile-form">
+          <div class="profile-photo">
+            <div class="avatar-preview" id="avatar-preview" role="img" aria-label="프로필 사진 미리보기">김</div>
+            <div class="photo-actions">
+              <button type="button" class="upload-label" id="choose-photo">사진 변경</button>
+              <button type="button" class="upload-label secondary" id="remove-photo">사진 삭제</button>
+            </div>
+            <input type="file" id="profile-photo-input" accept="image/jpeg,image/png,image/webp" hidden>
+            <p class="profile-hint">JPG, PNG, WEBP · 최대 10MB<br>사진은 정사각형으로 맞춰 저장해요.</p>
+          </div>
+          <div class="profile-fields">
+            <label class="field" for="profile-name">이름<input id="profile-name" name="name" autocomplete="name" maxlength="40" required placeholder="이름을 입력하세요"></label>
+            <label class="field" for="profile-birthday">생년월일<input id="profile-birthday" name="birthday" type="date" autocomplete="bday"></label>
+            <p class="profile-hint">저장한 정보는 이 브라우저에만 보관돼요.</p>
+            <button type="submit" class="primary save-profile" id="save-profile">변경사항 저장</button>
+            <p class="profile-message" id="profile-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+<section class="view" id="review">
+  <div class="section-head"><div><h2>오답 복습</h2><p class="muted">틀린 이유를 남기고, 며칠 뒤 다시 풀어 봐요.</p></div></div>
+  <div class="report-metrics review-metrics"><article class="card"><p class="muted">오늘까지 복습할 문제</p><strong id="review-count-due">0</strong></article><article class="card"><p class="muted">복습 대기</p><strong id="review-count-pending">0</strong></article><article class="card"><p class="muted">복습 완료</p><strong id="review-count-done">0</strong></article></div>
+  <form class="card study-card" id="review-form"><h3 id="review-form-heading">오답 등록</h3><fieldset id="review-fields" disabled>
+    <div class="review-form-grid"><label class="field" for="review-title">문제 이름<input id="review-title" required maxlength="120" placeholder="예: 수학 42쪽 3번 · 분수 계산"></label><label class="field" for="review-subject">과목<select id="review-subject"><option>미분류</option><option>수학</option><option>국어</option><option>영어</option><option>과학</option><option>사회</option><option>기타</option></select></label><label class="field" for="review-due">다시 풀 날짜<input type="date" id="review-due" required></label></div>
+    <label class="field" for="review-reason">틀린 이유와 다음에 기억할 점<textarea id="review-reason" required maxlength="3000" rows="4" placeholder="예: 통분하지 않고 분자끼리 더했어. 먼저 분모를 같게 만들자."></textarea></label>
+    <label class="field" for="review-photo">문제 사진 (선택)<input type="file" id="review-photo" accept="image/jpeg,image/png,image/webp"></label><p class="profile-hint">JPG, PNG, WEBP · 최대 15MB. 사진은 자르지 않고 크기를 줄여 저장해요.</p>
+    <img id="review-preview" class="review-preview" alt="저장할 문제 사진 미리보기" hidden><div class="task-actions"><button type="button" class="study-button" id="review-photo-remove" hidden>사진 제외</button><button type="submit" class="study-button filled" id="review-save">오답 저장</button><button type="button" class="study-button" id="review-cancel" hidden>수정 취소</button></div>
+  </fieldset></form>
+  <p class="profile-message" id="review-status" role="status" aria-live="polite">저장 공간을 여는 중이에요.</p><button type="button" class="study-button" id="review-undo" hidden>삭제한 오답 되돌리기</button>
+  <div class="study-list-head review-list-head"><h3>나의 오답</h3><label class="field" for="review-filter">보기<select id="review-filter"><option value="due">오늘까지 복습할 문제</option><option value="pending">복습 대기 전체</option><option value="done">복습 완료</option><option value="all" selected>전체 오답</option></select></label></div>
+  <p class="muted" id="review-empty">등록한 오답이 여기에 나타나요.</p><div id="review-list" class="review-list"></div>
+  <p class="profile-hint">사진·메모는 서버에 전송하지 않아요. 같은 사이트 주소와 브라우저에서만 볼 수 있으며, 브라우저 데이터를 지우면 기록도 지워져요.</p>
+</section>
+<dialog id="review-dialog" aria-labelledby="review-detail-title"><div class="review-dialog-head"><h2 id="review-detail-title">다시 풀기</h2><button type="button" class="study-button" id="review-close">닫기</button></div><p class="muted" id="review-detail-meta"></p><p>먼저 메모를 보지 않고 다시 풀어 보세요.</p><img id="review-detail-photo" class="review-detail-photo" alt="다시 풀 문제 사진" hidden><a id="review-full-photo" target="_blank" rel="noopener" hidden>사진 크게 보기 ↗</a><details id="review-note-reveal"><summary>틀린 이유와 메모 보기</summary><p id="review-detail-reason"></p></details><div class="task-actions"><button class="study-button filled" type="button" id="review-complete">다시 풀었어요 · 복습 완료</button><button class="study-button" type="button" id="review-again">3일 뒤 다시 복습</button></div><p id="review-detail-status" class="profile-message" role="status" aria-live="polite"></p></dialog>
+
+    </main>
+  </div>
+  <script>
+    const titles = { home:'오늘도 한 걸음씩!', plan:'나의 공부 계획', timetable:'오늘의 공부 시간표', habit:'공부 습관 진단', report:'나의 학습 리포트', profile:'프로필 정보', review:'오답 복습' };
+    function showView(id) {
+      document.querySelectorAll('.view').forEach((view) => view.classList.toggle('active', view.id === id));
+      document.querySelectorAll('.nav').forEach((item) => item.classList.toggle('active', item.dataset.view === id));
+      document.querySelector('#page-title').textContent = titles[id];
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+    document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => showView(button.dataset.view)));
+    document.querySelectorAll('[data-go]').forEach((button) => button.addEventListener('click', () => showView(button.dataset.go)));
+    function showSelectedFile(inputId, outputId, emptyText) {
+      const input = document.querySelector(inputId);
+      input.addEventListener('change', () => {
+        document.querySelector(outputId).textContent = input.files[0] ? `선택됨: ${input.files[0].name}` : emptyText;
+      });
+    }
+
+
+
+    const profileKey = 'studyon.profile.v1';
+    const nameInput = document.querySelector('#profile-name');
+    const birthdayInput = document.querySelector('#profile-birthday');
+    const photoInput = document.querySelector('#profile-photo-input');
+    const saveButton = document.querySelector('#save-profile');
+    let profileData = { name:'김', birthday:'', photo:'' };
+    let draftPhoto = '';
+    let photoVersion = 0;
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    birthdayInput.max = today;
+    function profileMessage(message, error = false) {
+      const status = document.querySelector('#profile-status');
+      status.textContent = message;
+      status.classList.toggle('error', error);
+    }
+    function renderAvatar(target, name, photo) {
+      target.replaceChildren();
+      if (photo) {
+        const img = document.createElement('img');
+        img.src = photo;
+        img.alt = '';
+        target.append(img);
+      } else {
+        target.textContent = Array.from(name.trim() || '나')[0];
+      }
+    }
+    function renderPreview() {
+      renderAvatar(document.querySelector('#avatar-preview'), nameInput.value, draftPhoto);
+    }
+    try {
+      const saved = JSON.parse(localStorage.getItem(profileKey) || 'null');
+      if (saved && typeof saved === 'object') {
+        profileData = {
+          name: typeof saved.name === 'string' && saved.name.trim() ? saved.name.slice(0,40) : '김',
+          birthday: typeof saved.birthday === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(saved.birthday) && saved.birthday <= today ? saved.birthday : '',
+          photo: typeof saved.photo === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(saved.photo) ? saved.photo : ''
+        };
+      }
+    } catch {
+      profileMessage('저장된 정보를 불러오지 못했어요. 브라우저의 저장 설정을 확인해 주세요.', true);
+    }
+    nameInput.value = profileData.name;
+    birthdayInput.value = profileData.birthday;
+    draftPhoto = profileData.photo;
+    renderPreview();
+    renderAvatar(document.querySelector('#profile-button'), profileData.name, profileData.photo);
+    nameInput.addEventListener('input', () => {
+      nameInput.setCustomValidity('');
+      renderPreview();
+      profileMessage('변경 후 저장 버튼을 눌러 주세요.');
+    });
+    birthdayInput.addEventListener('input', () => profileMessage('변경 후 저장 버튼을 눌러 주세요.'));
+    document.querySelector('#choose-photo').addEventListener('click', () => photoInput.click());
+    document.querySelector('#remove-photo').addEventListener('click', () => {
+      photoVersion++;
+      draftPhoto = '';
+      photoInput.value = '';
+      saveButton.disabled = false;
+      renderPreview();
+      profileMessage('사진을 삭제하려면 변경사항을 저장해 주세요.');
+    });
+    photoInput.addEventListener('change', async () => {
+      const file = photoInput.files[0];
+      if (!file) return;
+      const version = ++photoVersion;
+      if (!['image/jpeg','image/png','image/webp'].includes(file.type) || file.size > 10*1024*1024) {
+        photoInput.value = '';
+        saveButton.disabled = false;
+        profileMessage('10MB 이하의 JPG, PNG, WEBP 사진을 선택해 주세요.', true);
+        return;
+      }
+      saveButton.disabled = true;
+      profileMessage('사진을 준비하고 있어요.');
+      const url = URL.createObjectURL(file);
+      try {
+        const img = new Image();
+        await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; img.src = url; });
+        if (version !== photoVersion) return;
+        const canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 384;
+        const context = canvas.getContext('2d');
+        const side = Math.min(img.naturalWidth, img.naturalHeight);
+        context.fillStyle = '#ffffff';
+        context.fillRect(0,0,384,384);
+        context.drawImage(img, (img.naturalWidth-side)/2, (img.naturalHeight-side)/2, side, side, 0,0,384,384);
+        draftPhoto = canvas.toDataURL('image/jpeg', .85);
+        renderPreview();
+        profileMessage('사진이 준비됐어요. 변경사항을 저장해 주세요.');
+      } catch {
+        if (version === photoVersion) profileMessage('사진을 읽지 못했어요. 다른 사진을 선택해 주세요.', true);
+      } finally {
+        URL.revokeObjectURL(url);
+        if (version === photoVersion) { saveButton.disabled = false; photoInput.value = ''; }
+      }
+    });
+    document.querySelector('#profile-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (saveButton.disabled) return;
+      const name = nameInput.value.trim();
+      nameInput.setCustomValidity(name ? '' : '이름을 입력해 주세요.');
+      if (!event.currentTarget.reportValidity()) return;
+      const nextProfile = { name, birthday:birthdayInput.value, photo:draftPhoto };
+      try {
+        localStorage.setItem(profileKey, JSON.stringify(nextProfile));
+        profileData = nextProfile;
+        nameInput.value = name;
+        renderAvatar(document.querySelector('#profile-button'), name, draftPhoto);
+        profileMessage('프로필 정보를 저장했어요.');
+      } catch {
+        profileMessage('저장하지 못했어요. 브라우저의 저장 공간과 설정을 확인해 주세요.', true);
+      }
+    });
+const Study = (() => {
+  const day = (time = Date.now()) => { const d = new Date(time); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+  const subject = value => ['수학','국어','영어','과학','사회','기타'].includes(value)?value:'미분류';
+  const planned = value => Number.isInteger(Number(value)) && Number(value)>0 && Number(value)<=1440 ? Number(value):0;
+  const empty = () => ({ tasks:[], active:null });
+  const seconds = (task, active, now) => task.seconds + (active && active.id === task.id ? Math.max(0, Math.floor((now-active.start)/1000)) : 0);
+  function stop(state, now) {
+    if (state.active) { const t=state.tasks.find(t=>t.id===state.active.id); if(t)t.seconds=seconds(t,state.active,now); state.active=null; }
+  }
+  function reduce(source, action, now=Date.now()) {
+    const s=JSON.parse(JSON.stringify(source));
+    const t=s.tasks.find(t=>t.id===action.id);
+    if(action.type==='add') {
+      const title=String(action.title||'').trim(); if(!title || title.length>120)throw Error('할 일을 1~120자로 입력해 주세요.');
+      s.tasks.push({id:action.id,title,date:day(now),done:false,seconds:0,subject:subject(action.subject),planned:planned(action.planned)});
+    } else if(action.type==='edit') {
+      const title=String(action.title||'').trim(); if(!title || title.length>120)throw Error('할 일을 1~120자로 입력해 주세요.');
+      if(t){t.title=title;t.subject=subject(action.subject);t.planned=planned(action.planned);}
+    } else if(action.type==='start' && t && !t.done) {
+      if(s.active?.id===t.id)return s;
+      stop(s,now); s.active={id:t.id,start:now};
+    } else if(action.type==='pause') stop(s,now);
+    else if(action.type==='toggle' && t) { if(s.active?.id===t.id)stop(s,now); t.done=!t.done; }
+    else if(action.type==='delete' && t) { if(s.active?.id===t.id)stop(s,now); s.tasks=s.tasks.filter(x=>x.id!==t.id); }
+    return s;
+  }
+  function load(raw) {
+    if(!raw)return empty();
+    const s=JSON.parse(raw);
+    if(!s || !Array.isArray(s.tasks) || s.tasks.some(t=>!t || typeof t.id!=='string' || typeof t.title!=='string' || !t.title.trim() || t.title.length>120 || !/^\d{4}-\d{2}-\d{2}$/.test(t.date) || typeof t.done!=='boolean' || !Number.isFinite(t.seconds) || t.seconds<0) || new Set(s.tasks.map(t=>t.id)).size!==s.tasks.length)throw Error('기록 형식 오류');
+    if(s.active && (!s.tasks.some(t=>t.id===s.active.id&&!t.done)||!Number.isFinite(s.active.start)))throw Error('타이머 형식 오류');
+    return {tasks:s.tasks.map(t=>({...t,subject:subject(t.subject),planned:planned(t.planned)})),active:s.active||null};
+  }
+  function report(state,range,now=Date.now()) {
+    const end=day(now), first=new Date(now);first.setHours(12,0,0,0);
+    if(range==='week')first.setDate(first.getDate()-((first.getDay()+6)%7));
+    if(range==='all'){
+      let baseline=state.tasks.length?state.tasks.map(task=>task.date).sort()[0]:end;
+      try { const plan=JSON.parse(localStorage.getItem('studyon.exam-plan.v1')||'null'); if(/^\d{4}-\d{2}-\d{2}$/.test(plan?.settings?.start||'') && plan.settings.start<=end)baseline=plan.settings.start; } catch {}
+      first.setTime(new Date(`${baseline}T12:00:00`).getTime());
+    }
+    const start=day(first.getTime());
+    const tasks=state.tasks.filter(t=>t.date>=start&&t.date<=end).map(t=>({...t,subject:subject(t.subject),planned:planned(t.planned),seconds:seconds(t,state.active,now)}));
+    const days=[]; for(let d=new Date(first);day(d.getTime())<=end;d.setDate(d.getDate()+1)){const date=day(d.getTime());days.push({date,seconds:tasks.filter(t=>t.date===date).reduce((n,t)=>n+t.seconds,0)});}
+    const groups=new Map();
+    for(const t of tasks){if(!groups.has(t.subject))groups.set(t.subject,{subject:t.subject,seconds:0,total:0,done:0,planned:0});const g=groups.get(t.subject);g.seconds+=t.seconds;g.total++;g.done+=Number(t.done);g.planned+=t.planned;}
+    return {start,end,total:tasks.length,done:tasks.filter(t=>t.done).length,seconds:tasks.reduce((n,t)=>n+t.seconds,0),planned:tasks.reduce((n,t)=>n+t.planned,0),days,subjects:[...groups.values()].sort((a,b)=>b.seconds-a.seconds),completed:tasks.filter(t=>t.done).sort((a,b)=>b.date.localeCompare(a.date))};
+  }
+  return {day,empty,seconds,reduce,load,report};
+})();
+
+(() => {
+  const key='studyon.study.v1', $=id=>document.getElementById(id);
+  let state=Study.empty(), editing=null, deleted=null, selected=Study.day(), lastDay=Study.day();
+  const say=(text,error=false)=>{ $('study-status').textContent=text; $('study-status').classList.toggle('error',error); };
+  try { state=Study.load(localStorage.getItem(key)); } catch { say('기존 기록을 읽지 못했어요. 저장 공간과 브라우저 설정을 확인해 주세요.',true); }
+  function dispatch(action) {
+    try { const next=Study.reduce(state,action); localStorage.setItem(key,JSON.stringify(next)); state=next; render(); say('저장했어요.'); return true; }
+    catch(e) { say(e.message==='할 일을 1~120자로 입력해 주세요.'?e.message:'저장하지 못했어요. 브라우저 저장 공간과 설정을 확인해 주세요.',true); return false; }
+  }
+  const time=n=>{ n=Math.floor(n); return `${String(Math.floor(n/3600)).padStart(2,'0')}:${String(Math.floor(n/60)%60).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`; };
+  function button(text,handler,cls='study-button') { const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=text;b.addEventListener('click',handler);return b; }
+  function render() {
+    const today=Study.day();
+    document.querySelector('.date').textContent=`${new Date().getMonth()+1}월 ${new Date().getDate()}일 · 오늘의 학습 현황`;
+    $('task-date').max=today; $('task-date').value=selected;
+    const rows=state.tasks.filter(t=>t.date===selected);
+    const todays=state.tasks.filter(t=>t.date===today), done=todays.filter(t=>t.done).length;
+    const percent=todays.length?Math.round(done/todays.length*100):0;
+    $('today-progress').textContent=`목표 ${todays.length}개 중 ${done}개 완료`;
+    const ring=document.querySelector('.ring');ring.dataset.percent=`${percent}%`;ring.style.background=`conic-gradient(var(--blue) 0 ${percent}%,#e7ebf4 ${percent}% 100%)`;ring.setAttribute('aria-label',`오늘 달성률 ${percent}퍼센트`);
+    const current=state.tasks.find(t=>t.id===state.active?.id), next=todays.find(t=>!t.done);
+    $('focus-title').textContent=current?current.title:next?next.title:todays.length?'오늘의 목표를 모두 완료했어요!':'오늘 할 일을 하나 정해 볼까요?';
+    $('focus-description').textContent=current?'타이머가 작동 중이에요. 공부 계획에서 일시정지할 수 있어요.':'작은 목표 1~3개부터 시작해 보세요.';
+    $('focus-action').textContent=current?'공부 중인 목표 보기':next?'공부 시작':'오늘 할 일 추가';
+    $('task-list').replaceChildren();
+    $('task-empty').hidden=rows.length>0;
+    $('task-empty').textContent=selected===today?'아직 할 일이 없어요. 위에서 첫 목표를 추가해 보세요.':'이 날짜에는 기록이 없어요.';
+    $('list-summary').textContent=`${selected===today?'오늘':selected} · ${rows.filter(t=>t.done).length}/${rows.length}개 완료`;
+    for(const task of rows) {
+      const row=document.createElement('li');row.className='task-row'+(task.done?' is-done':'');
+      const label=document.createElement('label');label.className='task-check';
+      const check=document.createElement('input');check.type='checkbox';check.checked=task.done;check.setAttribute('aria-label',`${task.title} 완료`);check.addEventListener('change',()=>{if(!dispatch({type:'toggle',id:task.id}))check.checked=task.done;});
+      const text=document.createElement('span');text.textContent=task.title;label.append(check,text);
+      const meta=document.createElement('span');meta.className='task-time';meta.dataset.taskTime=task.id;
+      const actions=document.createElement('div');actions.className='task-actions';
+      if(!task.done)actions.append(button(state.active?.id===task.id?'일시정지':'공부 시작',()=>dispatch({type:state.active?.id===task.id?'pause':'start',id:task.id})));
+      actions.append(button('수정',()=>{ editing=task.id;$('task-title').value=task.title;$('task-subject').value=task.subject||'미분류';$('task-minutes').value=task.planned||'';$('task-submit').textContent='수정 저장';$('cancel-edit').hidden=false;$('task-title').focus(); }));
+      actions.append(button('삭제',()=>{ const before=JSON.parse(JSON.stringify(task));before.seconds=Study.seconds(task,state.active,Date.now());if(dispatch({type:'delete',id:task.id})){deleted=before;$('undo-delete').hidden=false;if(editing===task.id)cancelEdit();say('삭제했어요. 되돌리기로 복구할 수 있어요.');} }));
+      row.append(label,meta,actions);$('task-list').append(row);
+    }
+    $('timer-task').textContent=current?current.title:'진행 중인 공부가 없어요';
+    $('timer-panel').hidden=!current;
+    tick();
+  }
+  function tick() {
+    const now=Date.now(), today=Study.day(now);
+    if(today!==lastDay){lastDay=today;selected=today;render();return;}
+    document.querySelectorAll('[data-task-time]').forEach(el=>{const t=state.tasks.find(t=>t.id===el.dataset.taskTime);el.textContent=`${t.subject||'미분류'} · 공부 ${time(Study.seconds(t,state.active,now))}${t.planned?' / 예상 '+t.planned+'분':''}`;});
+    const current=state.tasks.find(t=>t.id===state.active?.id);
+    $('timer-clock').textContent=current?time(Study.seconds(current,state.active,now)):'00:00:00';
+    renderReport(now);
+  }
+  function cancelEdit(){editing=null;$('task-title').value='';$('task-subject').value='미분류';$('task-minutes').value='';$('task-submit').textContent='할 일 추가';$('cancel-edit').hidden=true;}
+  $('task-form').addEventListener('submit',e=>{e.preventDefault();const title=$('task-title').value;const action=editing?{type:'edit',id:editing,title}:{type:'add',id:crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random()}`,title};action.subject=$('task-subject').value;action.planned=$('task-minutes').value;if(dispatch(action)){if(!editing)selected=Study.day();cancelEdit();render();$('task-title').focus();}});
+  $('cancel-edit').addEventListener('click',cancelEdit);
+  $('task-date').addEventListener('change',()=>{selected=$('task-date').value||Study.day();cancelEdit();render();});
+  $('show-today').addEventListener('click',()=>{selected=Study.day();render();});
+  $('pause-timer').addEventListener('click',()=>dispatch({type:'pause'}));
+  $('finish-timer').addEventListener('click',()=>{if(state.active)dispatch({type:'toggle',id:state.active.id});});
+  $('focus-action').addEventListener('click',()=>{showView('timetable');selected=Study.day();const current=state.tasks.find(t=>t.id===state.active?.id);if(current)selected=current.date;else{const next=state.tasks.find(t=>t.date===selected&&!t.done);if(next)dispatch({type:'start',id:next.id});else $('task-title').focus();}render();});
+  $('undo-delete').addEventListener('click',()=>{if(!deleted)return;try{const next={...state,tasks:[...state.tasks,deleted]};localStorage.setItem(key,JSON.stringify(next));state=next;selected=deleted.date;deleted=null;$('undo-delete').hidden=true;render();say('할 일을 복구했어요.');}catch{say('복구 내용을 저장하지 못했어요.',true);}});
+  window.addEventListener('storage',e=>{if(e.key===key){try{state=Study.load(e.newValue);cancelEdit();render();say('다른 탭의 변경사항을 불러왔어요.');}catch{say('다른 탭의 기록을 읽지 못했어요.',true);}}});
+  function renderReport(now=Date.now()) {
+    const range=$('report-range').value;
+    const data=Study.report(state,range,now);
+    const duration=n=>n<60?`${Math.floor(n)}초`:`${Math.floor(n/3600)?Math.floor(n/3600)+'시간 ':''}${Math.floor(n/60)%60}분`;
+    $('report-period').textContent=`${data.start} ~ ${data.end} · ${range==='today'?'오늘':range==='week'?'월요일부터 오늘까지':'전체 기록'}`;
+    $('report-time').textContent=duration(data.seconds);
+    $('report-done').textContent=`${data.done} / ${data.total}개`;
+    $('report-percent').textContent=`${data.total?Math.round(data.done/data.total*100):0}%`;
+    $('report-planned').textContent=`${data.planned}분`;
+    let scheduled=[];
+    try { const saved=JSON.parse(localStorage.getItem('studyon.exam-plan.v1')||'null'); scheduled=Array.isArray(saved?.schedule)?saved.schedule.filter(item=>item.date>=data.start&&item.date<=data.end):[]; } catch {}
+    const completedSchedule=scheduled.filter(item=>state.tasks.some(task=>task.done&&task.date===item.date&&String(task.title).includes(item.title))).length;
+    const schedulePercent=scheduled.length?Math.round(completedSchedule/scheduled.length*100):0;
+    $('report-schedule').textContent=`${completedSchedule} / ${scheduled.length}개`;
+    $('report-schedule-detail').textContent=scheduled.length?`${schedulePercent}% · 시간표에 배정된 항목 기준`:'시간표를 만들면 표시돼요.';
+    $('report-comparison').textContent=data.planned?`예상 ${data.planned}분 · 실제 ${duration(data.seconds)}. 다음 계획을 세울 때 비교해 보세요.`:'할 일에 예상 시간을 적으면 실제 공부 시간과 비교할 수 있어요.';
+    $('report-empty').hidden=data.total>0;
+    $('report-days').replaceChildren();
+    const max=Math.max(60,...data.days.map(d=>d.seconds));
+    for(const day of data.days){
+      const row=document.createElement('div');row.className='report-day';
+      const label=document.createElement('span');label.textContent=day.date.slice(5).replace('-','/');
+      const track=document.createElement('div');track.className='report-track';track.setAttribute('aria-hidden','true');
+      const bar=document.createElement('div');bar.className='report-bar';bar.style.width=`${day.seconds/max*100}%`;track.append(bar);
+      const value=document.createElement('span');value.textContent=duration(day.seconds);row.append(label,track,value);$('report-days').append(row);
+    }
+    $('report-subjects').replaceChildren();
+    for(const group of data.subjects){
+      const row=document.createElement('li');row.className='report-subject';
+      const name=document.createElement('strong');name.textContent=group.subject;
+      const detail=document.createElement('span');detail.textContent=`${duration(group.seconds)} · ${group.done}/${group.total}개 완료 · 예상 ${group.planned}분`;
+      row.append(name,detail);$('report-subjects').append(row);
+    }
+    $('report-subject-empty').hidden=data.subjects.length>0;
+    $('report-completed').replaceChildren();
+    for(const task of data.completed){
+      const row=document.createElement('li');row.className='report-subject';
+      const name=document.createElement('strong');name.textContent=task.title;
+      const detail=document.createElement('span');detail.textContent=`${task.date} · ${task.subject} · ${duration(task.seconds)}`;
+      row.append(name,detail);$('report-completed').append(row);
+    }
+    $('report-completed-empty').hidden=data.completed.length>0;
+  }
+  $('report-range').addEventListener('change',()=>renderReport());
+  document.querySelectorAll('[data-report-range]').forEach(button=>button.addEventListener('click',()=>{const range=button.dataset.reportRange;$('report-range').value=range;document.querySelectorAll('[data-report-range]').forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.classList.toggle('filled',active);});renderReport();}));
+  document.addEventListener('studyon:add-schedule',event=>{
+    const tasks=Array.isArray(event.detail?.tasks)?event.detail.tasks:[];
+    if(!tasks.length)return;
+    try {
+      let next=state;
+      for(const task of tasks){
+        const when=new Date(`${task.date}T12:00:00`).getTime();
+        next=Study.reduce(next,{type:'add',id:crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random()}`,title:`${task.startTime}~${task.endTime} · ${task.title}`,subject:task.subject,planned:task.minutes},when);
+      }
+      localStorage.setItem(key,JSON.stringify(next));state=next;selected=tasks[0].date;render();say(`${tasks.length}개 계획을 공부 실행 목록에 추가했어요.`);
+    } catch { say('시간표를 추가하지 못했어요. 브라우저 저장 공간을 확인해 주세요.',true); }
+  });
+
+  render();setInterval(tick,1000);
+})();
+
+(() => {
+  const $=id=>document.getElementById(id), key='studyon.exam-plan.v1', form=$('exam-form');
+  const today=Study.day(); $('exam-start').value=today; $('exam-start').min=today; $('exam-date').min=today;
+  let schedule=[], scheduleDay='';
+  const topicRow=(topic={name:'',level:'중'})=>{
+    const row=document.createElement('div');row.className='topic-row';
+    row.innerHTML=`<label class="field"><span>단원</span><input maxlength="100" required placeholder="예: 2단원 일차함수" value="${String(topic.name||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></label><label class="field"><span>난이도</span><select><option${topic.level==='하'?' selected':''}>하</option><option${topic.level==='중'?' selected':''}>중</option><option${topic.level==='상'?' selected':''}>상</option></select></label><button type="button" class="study-button">삭제</button>`;
+    row.querySelector('button').addEventListener('click',()=>{if($('topic-list').children.length>1)row.remove();else $('exam-status').textContent='단원은 하나 이상 필요해요.';});return row;
+  };
+  const addTopic=topic=>$('topic-list').append(topicRow(topic));$('add-topic').addEventListener('click',()=>addTopic());addTopic();
+  const message=(text,error=false)=>{$('exam-status').textContent=text;$('exam-status').classList.toggle('error',error);};
+  const minutes=time=>{const [hour,minute]=String(time||'').split(':').map(Number);return Number.isInteger(hour)&&Number.isInteger(minute)?hour*60+minute:NaN;};
+  const clock=value=>`${String(Math.floor(value/60)).padStart(2,'0')}:${String(value%60).padStart(2,'0')}`;
+  const slotsBetween=(start,end,weekly)=>{const slots=[];for(let d=new Date(`${start}T12:00:00`);d<new Date(`${end}T12:00:00`);d.setDate(d.getDate()+1)){const slot=weekly[d.getDay()];if(slot)slots.push({date:Study.day(d.getTime()),...slot,cursor:slot.start});}return slots;};
+  const build=(settings,topics)=>{
+    const slots=slotsBetween(settings.start,settings.examDate,settings.weekly);if(!slots.length)throw Error('시험 전 공부 가능한 시간이 없어요. 요일과 시작·종료 시간을 확인해 주세요.');
+    const weight={하:1,중:2,상:3}, primary=topics.flatMap(topic=>Array.from({length:weight[topic.level]},()=>({...topic,review:false}))).sort((a,b)=>weight[b.level]-weight[a.level]), queue=[...primary,...topics.map(topic=>({...topic,review:true}))];
+    const result=[];for(let index=0;index<queue.length;index++){let slot=slots[Math.min(slots.length-1,Math.floor(index*slots.length/queue.length))],tries=0;while(slot.end-slot.cursor<20&&tries<slots.length){slot=slots[(slots.indexOf(slot)+1)%slots.length];tries++;}if(slot.end-slot.cursor<20)break;const duration=Math.min(50,slot.end-slot.cursor),topic=queue[index],start=slot.cursor,end=start+duration;slot.cursor=end;result.push({date:slot.date,startTime:clock(start),endTime:clock(end),title:`${settings.name} · ${topic.name}${topic.review?' 복습':''}`,subject:settings.subject,minutes:duration,level:topic.level});}return result.sort((a,b)=>`${a.date}${a.startTime}`.localeCompare(`${b.date}${b.startTime}`));
+  };
+  const timetableLevel=()=>{const weight={하:1,중:2,상:3},average=schedule.reduce((sum,item)=>sum+(weight[item.level]||2),0)/schedule.length,perDay={};schedule.forEach(item=>perDay[item.date]=(perDay[item.date]||0)+item.minutes);const longest=Math.max(...Object.values(perDay));if(average>=2.45||longest>140)return {name:'상',efficiency:'예상 집중 효율 70~80%',detail:'도전적인 시간표예요. 상 난이도 단원이 많거나 하루 공부량이 길어요. 한 칸을 끝낸 뒤 10분 휴식을 넣어 주세요.',className:'level-high'};if(average>=1.65||longest>90)return {name:'중',efficiency:'예상 집중 효율 80~90%',detail:'그럭저럭 해낼 수 있는 시간표예요. 계획대로 시작하고, 밀린 날만 다음 가능한 시간으로 옮겨 주세요.',className:'level-mid'};return {name:'하',efficiency:'예상 집중 효율 90~95%',detail:'누구나 편하게 시작할 수 있는 시간표예요. 여유가 생기면 복습 한 칸을 추가해도 좋아요.',className:'level-low'};};
+  const formatDay=date=>{const d=new Date(`${date}T12:00:00`),days=['일','월','화','수','목','금','토'];return `${d.getMonth()+1}.${d.getDate()} ${days[d.getDay()]}`;};
+  const moveDay=offset=>{const d=new Date(`${scheduleDay}T12:00:00`);d.setDate(d.getDate()+offset);scheduleDay=Study.day(d.getTime());render();};
+  const studyTasks=()=>{try{return JSON.parse(localStorage.getItem('studyon.study.v1')||'{"tasks":[]}').tasks||[];}catch{return [];}};
+  const completed=item=>studyTasks().some(task=>task.done&&task.date===item.date&&String(task.title).includes(item.title));
+  const render=()=>{const list=$('schedule-list');list.replaceChildren();if(!schedule.length){$('exam-schedule').hidden=true;return;}$('exam-schedule').hidden=false;if(!scheduleDay)scheduleDay=today;const todayItems=schedule.filter(item=>item.date===scheduleDay),done=todayItems.filter(completed).length;$('schedule-title').textContent=`오늘의 시간표 · ${done}/${todayItems.length}개 완료`;const rating=timetableLevel(),summary=$('schedule-summary');summary.className=`schedule-summary ${rating.className}`;summary.textContent=todayItems.length?`오늘 ${todayItems.reduce((sum,item)=>sum+item.minutes,0)}분 계획 · 시간표 전체 난이도 ${rating.name} · ${rating.efficiency}. ${rating.detail}`:`오늘은 자동으로 배정된 공부가 없어요. 이전·다음 날짜를 눌러 다른 날의 시간표를 확인해 보세요.`;$('schedule-date').textContent=formatDay(scheduleDay);$('schedule-empty').hidden=todayItems.length>0;$('add-schedule-tasks').disabled=!todayItems.length;$('add-schedule-tasks').textContent=todayItems.length?'오늘 할 일에 추가':'오늘 계획 없음';for(const item of todayItems){const li=document.createElement('li');li.className='schedule-item';const title=document.createElement('strong');title.textContent=completed(item)?`✓ ${item.title}`:item.title;const meta=document.createElement('span');meta.textContent=`${item.startTime}~${item.endTime} · ${item.subject} · 단원 난이도 ${item.level||'중'}`;li.append(title,meta);list.append(li);}};
+  form.addEventListener('submit',event=>{event.preventDefault();const weekly={};document.querySelectorAll('#exam-days .weekly-slot').forEach(row=>{const checked=row.querySelector('input[type="checkbox"]'),times=row.querySelectorAll('input[type="time"]'),start=minutes(times[0].value),end=minutes(times[1].value);if(checked.checked)weekly[checked.value]={start,end};});const settings={name:$('exam-name').value.trim(),subject:$('exam-subject').value,examDate:$('exam-date').value,start:$('exam-start').value,weekly};const topics=[...$('topic-list').children].map(row=>({name:row.querySelector('input').value.trim(),level:row.querySelector('select').value})).filter(topic=>topic.name);try{if(!settings.name||!settings.examDate||!settings.start||!topics.length)throw Error('시험 정보와 단원을 모두 입력해 주세요.');if(settings.start>=settings.examDate)throw Error('시험일은 공부 시작일보다 뒤여야 해요.');if(!Object.keys(weekly).length)throw Error('공부할 요일을 하나 이상 선택해 주세요.');if(Object.values(weekly).some(slot=>!Number.isFinite(slot.start)||!Number.isFinite(slot.end)||slot.end-slot.start<20))throw Error('선택한 요일의 종료 시간은 시작 시간보다 20분 이상 뒤여야 해요.');schedule=build(settings,topics);scheduleDay=today;localStorage.setItem(key,JSON.stringify({settings,topics,schedule}));window.studyonSyncReminders?.();render();message('일주일 일정에 맞춰 시간표를 만들었어요. 아래에서 오늘 하루 계획만 확인하세요.');}catch(error){message(error.message,true);}});
+  $('schedule-prev').addEventListener('click',()=>moveDay(-1));$('schedule-next').addEventListener('click',()=>moveDay(1));
+  $('add-schedule-tasks').addEventListener('click',()=>{const todayItems=schedule.filter(item=>item.date===scheduleDay);if(!todayItems.length)return;document.dispatchEvent(new CustomEvent('studyon:add-schedule',{detail:{tasks:todayItems}}));});
+  $('rebalance-schedule').addEventListener('click',()=>{try{const saved=JSON.parse(localStorage.getItem(key)||'null'), overdue=schedule.filter(item=>!completed(item)&&item.date<today);if(!saved?.settings?.weekly)throw Error('현재 시간표는 다시 만들어야 조정할 수 있어요.');if(!overdue.length){message('미완료로 지난 계획이 없어요. 현재 시간표를 잘 따라가고 있어요.');return;}const slots=slotsBetween(today,saved.settings.examDate,saved.settings.weekly);if(!slots.length)throw Error('시험 전 남은 공부 가능 시간이 없어요.');for(const item of schedule.filter(item=>!overdue.includes(item)&&item.date>=today)){const slot=slots.find(slot=>slot.date===item.date);if(slot)slot.cursor=Math.max(slot.cursor,minutes(item.endTime));}let position=0;for(const item of overdue){while(position<slots.length&&slots[position].end-slots[position].cursor<item.minutes)position++;if(position===slots.length)throw Error('남은 가능 시간에 미완료 계획을 모두 넣기 어려워요. 공부 가능 시간을 늘려 주세요.');const slot=slots[position],start=slot.cursor;slot.cursor+=item.minutes;item.date=slot.date;item.startTime=clock(start);item.endTime=clock(slot.cursor);}scheduleDay=overdue[0].date;localStorage.setItem(key,JSON.stringify({...saved,schedule}));render();message(`${overdue.length}개 미완료 계획을 남은 시간에 다시 배정했어요.`);}catch(error){message(error.message||'시간표를 조정하지 못했어요.',true);}});
+  $('clear-exam').addEventListener('click',()=>{form.reset();$('exam-start').value=today;$('topic-list').replaceChildren();addTopic();schedule=[];scheduleDay='';localStorage.removeItem(key);render();message('새 시험 계획을 만들 수 있어요.');});
+  try{const saved=JSON.parse(localStorage.getItem(key)||'null');if(saved?.settings&&Array.isArray(saved.topics)){for(const [id,value] of Object.entries({ 'exam-name':saved.settings.name,'exam-subject':saved.settings.subject,'exam-date':saved.settings.examDate,'exam-start':saved.settings.start }))if($(id))$(id).value=value||'';document.querySelectorAll('#exam-days .weekly-slot').forEach(row=>{const checked=row.querySelector('input[type="checkbox"]'),times=row.querySelectorAll('input[type="time"]'),slot=saved.settings.weekly?.[checked.value];if(slot){checked.checked=true;times[0].value=clock(slot.start);times[1].value=clock(slot.end);}else checked.checked=false;});$('topic-list').replaceChildren();saved.topics.forEach(addTopic);schedule=Array.isArray(saved.schedule)?saved.schedule:[];scheduleDay=today;render();message('마지막 시험 계획을 불러왔어요. 오늘 하루 시간표를 확인하세요.');}}catch{localStorage.removeItem(key);}
+})();
+
+(() => {
+  const enabledKey='studyon.reminders.v1', $=id=>document.getElementById(id), sent=new Set();
+  const status=(text,error=false)=>{$('reminder-status').textContent=text;$('reminder-status').classList.toggle('error',error);};
+  const render=()=>{const enabled=localStorage.getItem(enabledKey)==='true';$('enable-reminders').hidden=enabled;$('test-reminder').hidden=!enabled;$('disable-reminders').hidden=!enabled;if(!('Notification' in window))status('이 브라우저는 알림을 지원하지 않아요.',true);else if(enabled)status(Notification.permission==='granted'?'알림이 켜져 있어요. 다음 공부 1시간 전에 알려드릴게요.':'브라우저 설정에서 알림 권한을 허용해 주세요.',Notification.permission!=='granted');else status('알림을 켜면 다음 공부 시작 1시간 전에 알려드려요.');};
+  const notify=()=>{if(localStorage.getItem(enabledKey)!=='true'||!('Notification' in window)||Notification.permission!=='granted')return;let saved;try{saved=JSON.parse(localStorage.getItem('studyon.exam-plan.v1')||'null');}catch{return;}const now=Date.now(),date=Study.day(now);for(const item of saved?.schedule||[]){if(item.date!==date)continue;const start=new Date(`${item.date}T${item.startTime}:00`).getTime(),id=`${item.date}-${item.startTime}-${item.title}`;if(now>=start-60*60*1000&&now<start&& !sent.has(id)){new Notification('스터디온 · 1시간 뒤 공부 시작',{body:`${item.startTime}~${item.endTime} ${item.title}`});sent.add(id);}}};
+  $('enable-reminders').addEventListener('click',async()=>{if(!('Notification' in window)){render();return;}try { if(window.studyonOneSignal) await window.studyonOneSignal.Notifications.requestPermission(); else await Notification.requestPermission(); } catch {} if(Notification.permission==='granted'){localStorage.setItem(enabledKey,'true');status('알림을 켰어요. OneSignal 구독과 1시간 전 알림을 준비했어요.');notify();setTimeout(()=>window.studyonSyncReminders?.(),1500);}else status('알림 권한이 허용되지 않았어요. 브라우저 설정에서 알림을 허용해 주세요.',true);render();});
+  $('test-reminder').addEventListener('click',()=>{if(!('Notification' in window)||Notification.permission!=='granted'){status('먼저 알림을 켜고 브라우저 권한을 허용해 주세요.',true);return;}new Notification('스터디온 · 공부 시작 알림',{body:'테스트 알림이에요. 1시간 뒤 수학 2단원 공부가 시작돼요.'});status('테스트 알림을 보냈어요. 화면 오른쪽 위 알림을 확인해 주세요.');});
+  $('disable-reminders').addEventListener('click',()=>{localStorage.removeItem(enabledKey);render();});
+  render();notify();setInterval(notify,60000);
+})();
+
+const Review = (() => {
+  const date = (n=Date.now()) => {const d=new Date(n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+  const after = (days,n=Date.now()) => {const d=new Date(n);d.setDate(d.getDate()+days);return date(d.getTime());};
+  const validDate = text => {if(!/^\d{4}-\d{2}-\d{2}$/.test(text))return false;const d=new Date(text+'T12:00:00');return Number.isFinite(d.getTime())&&date(d.getTime())===text;};
+  function make(values, previous, now=Date.now()) {
+    const title=String(values.title||'').trim(), reason=String(values.reason||'').trim();
+    if(!title||title.length>120)throw Error('문제 이름을 1~120자로 적어 주세요.');
+    if(!reason||reason.length>3000)throw Error('틀린 이유를 1~3,000자로 적어 주세요.');
+    if(!validDate(values.due))throw Error('복습 날짜를 확인해 주세요.');
+    return {...previous,id:previous?.id||values.id,title,reason,subject:values.subject||'미분류',due:values.due,photo:values.photo||null,createdAt:previous?.createdAt||now,updatedAt:now,done:previous?.due===values.due?!!previous.done:false,reviews:previous?.reviews||[],deletedAt:null};
+  }
+  function complete(note,now=Date.now()){return note.done?note:{...note,done:true,updatedAt:now,reviews:[...note.reviews,now]};}
+  function visible(notes,filter,today=date()) {return notes.filter(n=>!n.deletedAt && (filter==='all'||filter==='due'&&!n.done&&n.due<=today||filter==='pending'&&!n.done||filter==='done'&&n.done)).sort((a,b)=>a.due.localeCompare(b.due)||b.createdAt-a.createdAt);}
+  return {date,after,validDate,make,complete,visible};
+})();
+(() => {
+  const $=id=>document.getElementById(id);
+  let db, notes=[], editing=null, draft=null, photoBusy=false, saving=false, photoGeneration=0, detailId=null;
+  let previewURL=null, detailURL=null, thumbnails=[];
+  const message=(text,error=false)=>{ $('review-status').textContent=text;$('review-status').classList.toggle('error',error);};
+  const detailMessage=(text,error=false)=>{$('review-detail-status').textContent=text;$('review-detail-status').classList.toggle('error',error);};
+  function busy(){ $('review-save').disabled=!db||saving||photoBusy;$('review-fields').disabled=!db||saving; }
+  function records(){return new Promise((resolve,reject)=>{const tx=db.transaction('notes','readonly'),req=tx.objectStore('notes').getAll();tx.oncomplete=()=>resolve(req.result);tx.onabort=()=>reject(tx.error);tx.onerror=()=>reject(tx.error);});}
+  function put(note){return new Promise((resolve,reject)=>{const tx=db.transaction('notes','readwrite');tx.objectStore('notes').put(note);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error);tx.onerror=()=>reject(tx.error);});}
+  function setPhoto(blob){draft=blob;if(previewURL)URL.revokeObjectURL(previewURL);previewURL=blob?URL.createObjectURL(blob):null;$('review-preview').hidden=!blob;if(blob)$('review-preview').src=previewURL;else $('review-preview').removeAttribute('src');$('review-photo-remove').hidden=!blob;}
+  function reset(){editing=null;photoGeneration++;photoBusy=false;$('review-form').reset();$('review-due').value=Review.after(2);setPhoto(null);$('review-save').textContent='오답 저장';$('review-cancel').hidden=true;$('review-form-heading').textContent='오답 등록';busy();}
+  function edit(note){editing=note.id;photoGeneration++;photoBusy=false;$('review-title').value=note.title;$('review-reason').value=note.reason;$('review-subject').value=note.subject;$('review-due').value=note.due;$('review-photo').value='';setPhoto(note.photo);$('review-save').textContent='수정 저장';$('review-cancel').hidden=false;$('review-form-heading').textContent='오답 수정';busy();$('review-title').focus();$('review-form').scrollIntoView({behavior:'smooth',block:'start'});message('내용을 수정한 뒤 저장해 주세요. 복습 날짜를 바꾸면 다시 복습 대기 상태가 돼요.');}
+  function button(text,fn){const b=document.createElement('button');b.type='button';b.className='study-button';b.textContent=text;b.addEventListener('click',fn);return b;}
+  function render(){
+    thumbnails.forEach(url=>URL.revokeObjectURL(url));thumbnails=[];
+    const all=notes.filter(n=>!n.deletedAt),due=Review.visible(notes,'due');
+    $('review-count-due').textContent=due.length;$('review-count-pending').textContent=all.filter(n=>!n.done).length;$('review-count-done').textContent=all.filter(n=>n.done).length;
+    $('home-review-count').textContent=due.length?`오늘까지 복습할 오답 ${due.length}개`:'오늘까지 복습할 오답이 없어요';
+    const items=Review.visible(notes,$('review-filter').value);$('review-list').replaceChildren();$('review-empty').hidden=!!items.length;
+    $('review-empty').textContent=!all.length?'처음에는 오답 1개만 등록해 보세요. 사진 없이 문제 이름과 메모만 저장해도 좋아요.':'이 조건에 맞는 오답이 없어요. 다른 필터를 선택해 보세요.';
+    for(const n of items){const card=document.createElement('article');card.className='card review-item';
+      if(n.photo){const img=document.createElement('img');const url=URL.createObjectURL(n.photo);thumbnails.push(url);img.src=url;img.alt=`${n.title} 문제 사진`;img.className='review-thumb';img.loading='lazy';card.append(img);}
+      const tag=document.createElement('p');tag.className='review-tag';tag.textContent=`${n.subject} · ${n.done?'복습 완료':n.due<Review.date()?'복습 날짜 지남':n.due===Review.date()?'오늘 복습':'복습 대기'}`;
+      const title=document.createElement('h3');title.textContent=n.title;
+      const meta=document.createElement('p');meta.className='muted';meta.textContent=`복습일 ${n.due} · 복습 ${n.reviews.length}회`;
+      const actions=document.createElement('div');actions.className='task-actions';actions.append(button('다시 풀기',()=>openDetail(n.id)),button('수정',()=>edit(n)),button('삭제',()=>mutate({...n,deletedAt:Date.now()},'삭제했어요. 아래 되돌리기로 복구할 수 있어요.')));
+      card.append(tag,title,meta,actions);$('review-list').append(card);
+    }
+    $('review-undo').hidden=!notes.some(n=>n.deletedAt);busy();
+  }
+  async function mutate(note,text){if(saving)return;saving=true;busy();try{await put(note);notes=await records();if(editing===note.id&&note.deletedAt)reset();render();message(text);if(detailId===note.id){if(note.deletedAt)$('review-dialog').close();else openDetail(note.id);}}catch{message('저장하지 못했어요. 브라우저 저장 공간과 설정을 확인해 주세요.',true);detailMessage('저장하지 못했어요. 다시 시도해 주세요.',true);}finally{saving=false;busy();}}
+  function openDetail(id){const n=notes.find(n=>n.id===id&&!n.deletedAt);if(!n)return;detailId=id;
+    $('review-detail-title').textContent=n.title;$('review-detail-meta').textContent=`${n.subject} · 복습일 ${n.due} · 복습 ${n.reviews.length}회${n.done?' · 완료':''}`;
+    $('review-detail-reason').textContent=n.reason;$('review-note-reveal').open=false;
+    if(detailURL)URL.revokeObjectURL(detailURL);detailURL=n.photo?URL.createObjectURL(n.photo):null;$('review-detail-photo').hidden=!n.photo;
+    if(n.photo){$('review-detail-photo').src=detailURL;$('review-full-photo').href=detailURL;}else $('review-detail-photo').removeAttribute('src');$('review-full-photo').hidden=!n.photo;
+    $('review-complete').disabled=n.done;$('review-complete').textContent=n.done?'복습 완료됨':'다시 풀었어요 · 복습 완료';detailMessage('');
+    if(!$('review-dialog').open)$('review-dialog').showModal();
+  }
+  $('review-form').addEventListener('submit',async e=>{e.preventDefault();if(!db||saving||photoBusy)return;
+    let note;try{note=Review.make({id:crypto.randomUUID(),title:$('review-title').value,reason:$('review-reason').value,subject:$('review-subject').value,due:$('review-due').value,photo:draft},notes.find(n=>n.id===editing));}catch(e){message(e.message,true);return;}
+    saving=true;busy();try{await put(note);notes=await records();reset();render();message('오답을 저장했어요. 복습 날짜에 다시 풀어 보세요.');}catch{message('저장하지 못했어요. 내용은 그대로 두었어요. 저장 공간을 확인해 주세요.',true);}finally{saving=false;busy();}
+  });
+  $('review-photo').addEventListener('change',async()=>{const file=$('review-photo').files[0];if(!file)return;const gen=++photoGeneration;
+    if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>15*1024*1024){message('15MB 이하의 JPG, PNG, WEBP 사진을 선택해 주세요.',true);$('review-photo').value='';return;}
+    photoBusy=true;busy();message('사진을 준비하고 있어요.');const url=URL.createObjectURL(file);
+    try{const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});if(gen!==photoGeneration)return;
+      const scale=Math.min(1,2000/Math.max(img.naturalWidth,img.naturalHeight)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));const ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.9));if(gen!==photoGeneration)return;if(!blob)throw Error();setPhoto(blob);message('사진이 준비됐어요. 내용을 적고 저장해 주세요.');
+    }catch{if(gen===photoGeneration)message('사진을 읽지 못했어요. 다른 사진을 선택해 주세요.',true);}finally{URL.revokeObjectURL(url);if(gen===photoGeneration){photoBusy=false;$('review-photo').value='';busy();}}
+  });
+  $('review-photo-remove').addEventListener('click',()=>{photoGeneration++;photoBusy=false;$('review-photo').value='';setPhoto(null);busy();message('사진을 제외했어요. 변경사항을 저장해 주세요.');});
+  $('review-cancel').addEventListener('click',()=>{reset();message('수정을 취소했어요.');});
+  $('review-filter').addEventListener('change',render);
+  $('review-undo').addEventListener('click',()=>{const last=notes.filter(n=>n.deletedAt).sort((a,b)=>b.deletedAt-a.deletedAt)[0];if(last)mutate({...last,deletedAt:null},'오답을 복구했어요.');});
+  $('review-close').addEventListener('click',()=>$('review-dialog').close());
+  $('review-dialog').addEventListener('close',()=>{detailId=null;if(detailURL)URL.revokeObjectURL(detailURL);detailURL=null;});
+  $('review-complete').addEventListener('click',()=>{const n=notes.find(n=>n.id===detailId);if(n)mutate(Review.complete(n),'복습 완료! 한 문제 더 익숙해졌어요.');});
+  $('review-again').addEventListener('click',()=>{const n=notes.find(n=>n.id===detailId);if(n)mutate({...n,done:false,due:Review.after(3),updatedAt:Date.now()},'3일 뒤 다시 복습하도록 예약했어요.');});
+  document.addEventListener('visibilitychange',async()=>{if(!document.hidden&&db&&!saving){try{notes=await records();render();}catch{message('기록을 다시 불러오지 못했어요.',true);}}});
+  document.addEventListener('studyon:review-added',async()=>{if(db){try{notes=await records();render();}catch{message('새 오답을 불러오지 못했어요. 새로고침해 주세요.',true);}}});
+  $('review-due').value=Review.after(2);busy();
+  try{const req=indexedDB.open('studyon.review.v1',1);req.onupgradeneeded=()=>req.result.createObjectStore('notes',{keyPath:'id'});req.onblocked=()=>message('다른 탭을 닫고 새로고침해 주세요.',true);req.onerror=()=>message('이 브라우저에서 오답 저장 공간을 열 수 없어요. 저장 설정을 확인해 주세요.',true);req.onsuccess=async()=>{db=req.result;db.onversionchange=()=>{db.close();db=null;busy();message('새로고침해 최신 저장 공간에 연결해 주세요.');};try{notes=await records();render();message('사진과 메모는 이 브라우저에만 저장돼요.');}catch{message('오답을 불러오지 못했어요.',true);}};}catch{message('이 브라우저는 오답 저장을 지원하지 않아요.',true);}
+})();
+
+(()=>{
+  const form=document.getElementById('habit-form'),result=document.getElementById('habit-result'),message=document.getElementById('habit-message');
+  document.querySelector('#habit .section-head .muted').textContent='30문항으로 계획·집중·복습 습관을 자세히 점검해요.';
+  const extras=[['plan','공부를 시작할 과목의 우선순위를 정하나요?'],['plan','오늘 할 일의 분량을 현실적으로 정하나요?'],['plan','시험이나 수행평가 날짜를 미리 확인하나요?'],['plan','공부가 끝난 뒤 내일 할 일을 적어 두나요?'],['plan','공부할 장소와 시간을 미리 정하나요?'],['plan','긴 과제는 시작 날짜를 앞당겨 정하나요?'],['plan','계획이 밀리면 다음 계획을 조정하나요?'],['plan','공부 전 필요한 자료를 모두 준비하나요?'],['focus','공부할 때 알림을 끄거나 멀리 두나요?'],['focus','한 과목을 시작하면 정한 시간까지 이어 가나요?'],['focus','집중이 흐트러지면 바로 다시 시작하나요?'],['focus','쉬는 시간을 정해 두고 지키나요?'],['focus','공부 중 웹툰·영상·게임을 보지 않나요?'],['focus','산만할 때 책상 위를 정리하나요?'],['focus','어려운 문제가 나와도 바로 포기하지 않나요?'],['focus','공부가 끝난 뒤 집중한 시간을 확인하나요?'],['review','틀린 문제의 이유를 짧게 적어 보나요?'],['review','모르는 내용은 다시 찾아보거나 질문하나요?'],['review','다음 날 전날 배운 내용을 다시 보나요?'],['review','일주일 안에 틀린 문제를 다시 풀어 보나요?'],['review','외운 내용을 책 없이 떠올려 보나요?'],['review','복습할 문제를 따로 표시해 두나요?'],['review','오답을 맞혔는지 다시 확인하나요?'],['review','공부가 끝난 뒤 중요한 내용을 한 줄로 정리하나요?']];
+  form.querySelector('.task-actions').insertAdjacentHTML('beforebegin',extras.map(([name,title],index)=>`<fieldset class="habit-question"><legend>${index+7}. ${title}</legend><div class="habit-options"><label><input type="radio" name="${name}" value="2" required>대부분 그렇다</label><label><input type="radio" name="${name}" value="1">가끔 그렇다</label><label><input type="radio" name="${name}" value="0">거의 아니다</label></div></fieldset>`).join(''));
+  [...form.querySelectorAll('.habit-question')].forEach((question,index)=>question.querySelectorAll('input').forEach(input=>input.name=`${input.name}-${index}`));
+  const questions=[...form.querySelectorAll('.habit-question')],actions=form.querySelector('.task-actions'),submit=actions.querySelector('[type="submit"]');let step=0;
+  questions.forEach((question,index)=>question.dataset.step=Math.floor(index/10));
+  actions.insertAdjacentHTML('afterbegin','<button class="study-button" id="habit-prev" type="button">← 이전</button><button class="study-button filled" id="habit-next" type="button">다음 10문항 →</button><p class="habit-progress" id="habit-progress">1 / 3 페이지</p>');
+  const previous=document.getElementById('habit-prev'),next=document.getElementById('habit-next'),progress=document.getElementById('habit-progress');
+  const renderStep=()=>{questions.forEach(question=>question.hidden=Number(question.dataset.step)!==step);previous.hidden=step===0;next.hidden=step===2;submit.hidden=step!==2;progress.textContent=`${step+1} / 3 페이지 · ${step*10+1}~${step*10+10}번`;};
+  const completeStep=()=>questions.filter(question=>Number(question.dataset.step)===step).every(question=>question.querySelector('input:checked'));
+  next.addEventListener('click',()=>{if(!completeStep()){message.textContent='이 페이지의 10문항을 모두 답해 주세요.';message.classList.add('error');return;}step++;message.textContent='';message.classList.remove('error');renderStep();form.scrollIntoView({behavior:'smooth',block:'start'});});
+  previous.addEventListener('click',()=>{step--;message.textContent='';message.classList.remove('error');renderStep();form.scrollIntoView({behavior:'smooth',block:'start'});});
+  renderStep();
+  const score=(values,name)=>values.filter(value=>value.name.startsWith(name)).reduce((total,value)=>total+Number(value.value),0);
+  const show=values=>{const plan=score(values,'plan'),focus=score(values,'focus'),review=score(values,'review'),total=plan+focus+review,weakest=[['계획',plan,'오늘 할 일을 25분짜리 한 개로 쪼개서 적어 보세요.'],['집중',focus,'공부를 시작하기 전에 25분 타이머를 켜고 휴대폰 알림을 꺼 보세요.'],['복습',review,'오늘 틀렸거나 헷갈린 문제 한 개만 골라 내일 다시 볼 날짜를 정해 보세요.']].sort((a,b)=>a[1]-b[1])[0];document.getElementById('habit-plan').textContent=`${plan}/20`;document.getElementById('habit-focus').textContent=`${focus}/20`;document.getElementById('habit-review').textContent=`${review}/20`;document.getElementById('habit-title').textContent=total>=48?'꾸준한 학습가':total>=30?'성장 중인 학습가':'작은 시작이 필요한 학습가';document.getElementById('habit-summary').textContent=`총 ${total}/60점이에요. 지금은 ${weakest[0]} 습관을 먼저 다듬으면 좋아요.`;document.getElementById('habit-action').textContent=`오늘의 한 가지 행동: ${weakest[2]}`;result.hidden=false;};
+  const saved=localStorage.getItem('studyon.habit.v1');if(saved){try{const values=JSON.parse(saved);for(const item of values){const option=form.querySelector(`input[name="${item.name}"][value="${item.value}"]`);if(option)option.checked=true;}show(values);message.textContent='마지막 진단 결과를 불러왔어요.';}catch{localStorage.removeItem('studyon.habit.v1');}}
+  form.addEventListener('submit',event=>{event.preventDefault();const values=[...new FormData(form).entries()].map(([name,value])=>({name,value}));if(values.length!==30){message.textContent='30문항 모두 답해 주세요.';message.classList.add('error');return;}localStorage.setItem('studyon.habit.v1',JSON.stringify(values));message.textContent='진단 결과를 저장했어요.';message.classList.remove('error');show(values);});
+  document.getElementById('habit-reset').addEventListener('click',()=>{form.reset();step=0;renderStep();result.hidden=true;localStorage.removeItem('studyon.habit.v1');message.textContent='다시 답해 보세요.';message.classList.remove('error');});
+})();
+
+(()=>{
+ return;
+ const $=id=>document.getElementById(id), endpoint='/.netlify/functions/answer-bank';
+ const setStatus=(id,text,error=false)=>{const target=$(id);target.textContent=text;target.classList.toggle('error',error);};
+ const banks=()=>JSON.parse(localStorage.getItem('studyon.answer-banks.v1')||'[]');
+ const saveBanks=value=>localStorage.setItem('studyon.answer-banks.v1',JSON.stringify(value));
+ const renderBanks=()=>{const list=banks(),select=$('grade-bank');select.replaceChildren();if(!list.length){select.append(new Option('먼저 답지를 등록해 주세요.',''));return;}for(const bank of list)select.append(new Option(bank.title,bank.id));};
+ const fields=()=>({book:($('grade-bank').selectedOptions[0]?.textContent||'').trim(),chapter:'전체',page:$('grade-page').value.trim(),question:$('grade-question').value.trim()});
+ async function request(body, headers={}){const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json',...headers},body:JSON.stringify(body)});const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.error||'요청을 처리하지 못했어요.');return data;}
+ $('student-grade-form').addEventListener('submit',async event=>{event.preventDefault();const values={...fields(),bankId:$('grade-bank').value,answer:$('grade-answer').value.trim()};setStatus('student-grade-status','답지를 확인하고 있어요.');$('student-grade-result').hidden=true;try{const data=await request({action:'grade',...values});const manual=data.verdict==='manual',correct=data.verdict==='correct';$('student-grade-title').textContent=manual?'직접 확인 필요':correct?'정답이에요!':'오답이에요';$('student-grade-title').className=manual?'grade-miss':correct?'grade-ok':'grade-miss';$('student-grade-detail').textContent=manual?'그리기·작도 문제는 답지와 내 그림을 직접 비교해 확인해 주세요.':correct?'등록된 답지와 내 답이 같아요.':'등록된 답지와 내 답이 달라요. 답지는 표시하지 않아요.';$('student-grade-result').hidden=false;setStatus('student-grade-status','채점했어요.');}catch(error){setStatus('student-grade-status',error.message,true);}});
+ const problemPages=value=>{const match=value.trim().match(/^(\d{1,5})(?:\s*(?:~|∼|－|-)\s*(\d{1,5}))?$/);if(!match)return [];const first=Number(match[1]),last=Number(match[2]||match[1]);return last>=first&&last-first<50?Array.from({length:last-first+1},(_,index)=>String(first+index)):[];};
+ const toEntries=(pages,title,manualQuestions,targetPages)=>{
+   const entries=[],seen=new Set(),manualSet=new Set(manualQuestions);
+   pages.forEach(text=>{
+     for(const raw of text.split(/\r?\n/)){const line=raw.trim();
+       const matches=[...line.matchAll(/(?:^|\s)(\d{1,5})\s*(?:번)?\s*[.)\]:：-]?\s*([①②③④⑤⑥⑦⑧⑨⑩]|[OoXx])(?=\s|$)/g)]; if(!matches.length)continue;
+       for(const match of matches){for(const page of targetPages){const key=`${page}|${match[1]}`; if(seen.has(key))continue; seen.add(key);entries.push({book:title,chapter:'전체',page,question:match[1],answer:manualSet.has(match[1])?'':match[2],manual:manualSet.has(match[1])});}}
+     }
+   });
+   for(const question of manualSet){for(const page of targetPages){const key=`${page}|${question}`;if(!seen.has(key)){seen.add(key);entries.push({book:title,chapter:'전체',page,question,answer:'',manual:true});}}}
+   return entries;
+ };
+ const pdfText=content=>{const lines=new Map();for(const item of content.items){if(!item.str)continue;const y=Math.round(item.transform[5]);if(!lines.has(y))lines.set(y,[]);lines.get(y).push({x:item.transform[4],text:item.str});}return [...lines.entries()].sort((a,b)=>b[0]-a[0]).map(([,items])=>items.sort((a,b)=>a.x-b.x).map(item=>item.text).join(' ')).join('\n');};
+ const ocrWorker=async()=>{if(!window.Tesseract)throw Error('OCR 도구를 준비하지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.'); return window.Tesseract.createWorker('kor+eng',1,{logger:message=>{if(message.status==='recognizing text')setStatus('answer-admin-status',`OCR로 글자를 읽고 있어요. ${Math.round((message.progress||0)*100)}%`);}});};
+ const ocrPdfPage=async(pdf,pageNumber,worker)=>{const page=await pdf.getPage(pageNumber),viewport=page.getViewport({scale:1.7}),canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;return (await worker.recognize(canvas)).data.text;};
+ const readAnswerFile=async(file,title)=>{const isPdf=file.type==='application/pdf'||/\.pdf$/i.test(file.name); if(!isPdf){const worker=await ocrWorker();try{setStatus('answer-admin-status','사진에서 답지를 OCR로 읽고 있어요.');return [ (await worker.recognize(file)).data.text ];}finally{await worker.terminate();}}
+   if(!window.studyonPdf)throw Error('PDF 읽기 도구를 준비 중이에요. 잠시 후 다시 선택해 주세요.'); const pdf=await window.studyonPdf.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise; if(pdf.numPages>200)throw Error('한 번에 200쪽 이하의 답지 PDF를 올릴 수 있어요.'); const pages=[],needsOcr=[];
+   for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){setStatus('answer-admin-status',`PDF ${pageNumber}/${pdf.numPages}쪽의 글자를 확인하고 있어요.`);const content=await (await pdf.getPage(pageNumber)).getTextContent();const text=pdfText(content);pages.push(text);if(text.replace(/\s/g,'').length<10)needsOcr.push(pageNumber);}
+   if(needsOcr.length){const worker=await ocrWorker();try{for(const pageNumber of needsOcr){setStatus('answer-admin-status',`PDF ${pageNumber}/${pdf.numPages}쪽을 OCR로 읽고 있어요.`);pages[pageNumber-1]=await ocrPdfPage(pdf,pageNumber,worker);}}finally{await worker.terminate();}} return pages;
+ };
+ const saveEntries=async(title,entries)=>{const bankId=crypto.randomUUID().replaceAll('-','');let saved=0;for(let start=0;start<entries.length;start+=500){setStatus('answer-admin-status',`${entries.length}개 문제를 안전하게 저장하고 있어요. (${Math.min(start+500,entries.length)}/${entries.length})`);const data=await request({action:'register',bankId,entries:entries.slice(start,start+500)});saved+=data.saved;}saveBanks([...banks().filter(bank=>bank.title!==title),{id:bankId,title}]);renderBanks();return saved;};
+ $('answer-import').addEventListener('change',async()=>{const file=$('answer-import').files[0],title=$('answer-book').value.trim(),targetPages=problemPages($('answer-problem-pages').value),manualQuestions=[...new Set($('answer-manual-questions').value.split(',').map(value=>value.trim()).filter(value=>/^\d{1,5}$/.test(value)))];if(!file)return;if(!title){setStatus('answer-admin-status','먼저 교재 이름을 입력해 주세요.',true);$('answer-import').value='';return;}if(!targetPages.length){setStatus('answer-admin-status','문제집 페이지를 7 또는 7~9 형식으로 입력해 주세요.',true);$('answer-import').value='';return;}const isPdf=file.type==='application/pdf'||/\.pdf$/i.test(file.name),maxSize=isPdf?100*1024*1024:20*1024*1024;if(file.size>maxSize){setStatus('answer-admin-status',isPdf?'100MB 이하의 PDF를 선택해 주세요.':'20MB 이하의 사진을 선택해 주세요.',true);return;}try{const entries=toEntries(await readAnswerFile(file,title),title,manualQuestions,targetPages);if(!entries.length)throw Error('문제 번호와 정답 쌍을 찾지 못했어요. 답지의 글자와 번호·정답 표기를 확인해 주세요.');const saved=await saveEntries(title,entries);setStatus('answer-admin-status',`${saved}개 문제를 인식해 내 답지에 저장했어요. 이제 문제 페이지·번호·내 답을 입력해 채점할 수 있어요.`);$('answer-import').value='';}catch(error){setStatus('answer-admin-status',error.message||'답지를 읽거나 저장하지 못했어요.',true);}});
+renderBanks();
+})();
+
+</script>
+  <script>
+    window.studyonSyncReminders = async () => {
+      if (localStorage.getItem('studyon.reminders.v1') !== 'true') return;
+      const OneSignal = window.studyonOneSignal;
+      const subscriptionId = OneSignal?.User?.PushSubscription?.id;
+      let plan;
+      try { plan = JSON.parse(localStorage.getItem('studyon.exam-plan.v1') || 'null'); } catch { return; }
+      if (!subscriptionId || !Array.isArray(plan?.schedule)) return;
+      let clientId = localStorage.getItem('studyon.reminder-client.v1');
+      if (!clientId) { clientId = crypto.randomUUID().replaceAll('-', ''); localStorage.setItem('studyon.reminder-client.v1', clientId); }
+      try {
+        await fetch('/.netlify/functions/reminder-subscriptions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ clientId, subscriptionId, schedule: plan.schedule }) });
+      } catch {}
+    };
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async OneSignal => {
+      try {
+        await OneSignal.init({
+          appId: '4e482348-7a62-4b58-84cb-65c90530d28c',
+          serviceWorkerPath: 'onesignal/OneSignalSDKWorker.js',
+          serviceWorkerParam: { scope: '/onesignal/' }
+        });
+        window.studyonOneSignal = OneSignal;
+        window.studyonSyncReminders();
+      } catch {}
+    });
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+    }
+    (() => {
+      const button = document.querySelector('#install-app'); let prompt;
+      window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); prompt = event; button.hidden = false; });
+      button.addEventListener('click', async () => { if (!prompt) return; prompt.prompt(); await prompt.userChoice; prompt = null; button.hidden = true; });
+      window.addEventListener('appinstalled', () => { button.hidden = true; });
+    })();
+  </script>
+</body>
+</html>
