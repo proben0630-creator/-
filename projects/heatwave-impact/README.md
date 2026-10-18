@@ -1,37 +1,38 @@
-# Heatwave Impact Report
+# 폭염 피해 보고서
 
-A science inquiry report asking whether rising heat can be connected to wider social damage.
-[Read the report](../../폭염%20피해%20보고서.pdf)
+기온 상승이 사회의 여러 피해와 연결될 수 있는지 살펴본 과학 탐구 보고서입니다.
 
-## What This Project Is
+[보고서 읽기](../../폭염%20피해%20보고서.pdf)
 
-- **For whom:** Readers interested in climate change and the effects of extreme heat in Korea.
-- **When to use it:** When studying how temperature change can affect health, infrastructure, agriculture, and industry.
-- **What it can do:** Compare long-term warming with recent Korean heat-illness data and examples of economic damage.
+## 이 작품은
 
-## How It Works
+- **누가 쓰나:** 기후변화와 한국의 폭염 피해에 관심 있는 사람이 읽습니다.
+- **어떤 상황에서 쓰나:** 기온 변화가 건강, 기반 시설, 농업과 산업에 주는 영향을 알아볼 때 사용합니다.
+- **무엇을 할 수 있나:** 장기적인 기온 상승, 최근 한국의 온열질환 자료, 경제 피해 사례를 함께 비교할 수 있습니다.
 
-The report first reviews the rise in global average surface temperature. It then examines Korean heat-illness trends and a representative industrial damage series, including fishery losses, before connecting the evidence in a single interpretation.
+## 어떻게 돌아가나
 
-Core approach: **climate trend → human-health evidence → economic damage examples → response measures**.
+먼저 세계 평균 지표면 온도의 상승을 살펴봅니다. 그다음 한국의 온열질환 변화와 양식업 피해 같은 산업 사례를 분석하고, 자료에서 확인한 내용을 하나의 흐름으로 연결합니다.
 
-## Screens
+핵심 흐름: **기후 추세 → 건강 피해 자료 → 경제 피해 사례 → 대응 방법**
 
-Two useful images would be:
+## 화면
 
-1. **Temperature and health evidence:** Capture the page containing the global temperature trend and the heat-illness chart.
-2. **Damage and response:** Capture the industry-loss example together with the proposed response measures.
+다음 두 장면을 찍으면 보고서를 잘 설명할 수 있습니다.
 
-## Conclusion
+1. **기온과 건강 자료:** 세계 기온 변화와 온열질환 그래프가 있는 페이지를 찍습니다.
+2. **피해와 대응 방법:** 산업 피해 사례와 대응 방법이 보이는 페이지를 찍습니다.
 
-The report concludes that global warming creates conditions in which extreme heat can become more likely and that recent Korean data show expanding health and economic risks. It also notes that a single dataset cannot prove that one event was caused by climate change.
+## 결론
 
-## Build Process
+지구온난화는 폭염이 발생하기 쉬운 환경을 만들며, 최근 한국의 자료에서도 건강과 경제 분야의 위험이 커지고 있음을 확인할 수 있습니다. 다만 한 가지 자료만으로 특정 피해가 기후변화 때문에 발생했다고 단정할 수는 없습니다.
 
-The inquiry compares datasets rather than relying on one dramatic example. It separates global climate trends from Korean impacts and states the limits of causal interpretation.
+## 만든 과정
 
-## Next Steps
+한 가지 큰 피해 사례에만 의존하지 않고 여러 자료를 비교했습니다. 세계의 기후 추세와 한국의 피해를 구분해 살펴보고, 자료만으로 원인을 해석할 때 생기는 한계도 함께 적었습니다.
 
-- Add consistent long-term datasets for more industries.
-- Compare regional vulnerability within Korea.
-- Test the relationship between temperature indicators and damage using statistical analysis.
+## 다음에 할 것
+
+- 더 많은 산업의 장기 피해 자료 추가하기
+- 한국 안에서도 지역별로 폭염 취약성을 비교하기
+- 기온 지표와 피해의 관계를 통계적으로 분석하기

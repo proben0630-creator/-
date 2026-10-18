@@ -1,37 +1,38 @@
-# Why Has Fine Dust Decreased?
+# 미세먼지는 왜 과거보다 줄었을까?
 
-A science inquiry report investigating why South Korea's fine-dust levels have fallen compared with the past.
-[Read the report](../../미세먼지.pdf)
+한국의 미세먼지 농도가 과거보다 줄어든 이유를 알아본 과학 탐구 보고서입니다.
 
-## What This Project Is
+[보고서 읽기](../../미세먼지.pdf)
 
-- **For whom:** Readers studying air pollution, environmental policy, or changes in Korea's PM2.5 levels.
-- **When to use it:** When examining whether cleaner air came from policy, international change, weather, or temporary social conditions.
-- **What it can do:** Summarize Korean PM2.5 trends, compare policies across countries, and explain several factors behind the decrease.
+## 이 작품은
 
-## How It Works
+- **누가 쓰나:** 대기오염, 환경 정책, 한국의 초미세먼지 변화에 관심 있는 사람이 읽습니다.
+- **어떤 상황에서 쓰나:** 공기가 깨끗해진 이유가 정책, 해외 변화, 날씨, 일시적인 사회 변화 중 무엇인지 알아볼 때 사용합니다.
+- **무엇을 할 수 있나:** 한국의 PM2.5 변화, 여러 나라의 정책, 농도 감소에 영향을 준 여러 원인을 함께 살펴볼 수 있습니다.
 
-The report compares Korean PM2.5 values from 2015 onward with changes in coal power, industry, transport, and seasonal controls. It also reviews policies in China, the United States, and the United Kingdom and discusses weather and COVID-19 as possible confounding factors.
+## 어떻게 돌아가나
 
-Core approach: **observed PM2.5 decline → Korean policy changes → international comparison → limits and alternative explanations**.
+2015년 이후 한국의 PM2.5 농도와 석탄발전, 산업, 교통, 계절관리제의 변화를 비교합니다. 중국, 미국, 영국의 정책도 함께 살펴보고, 날씨와 코로나19가 결과에 영향을 준 다른 원인일 가능성도 분석합니다.
 
-## Screens
+핵심 흐름: **PM2.5 감소 확인 → 한국의 정책 변화 → 해외 정책 비교 → 한계와 다른 원인 검토**
 
-Two useful images would be:
+## 화면
 
-1. **Korean PM2.5 trend:** Capture the chart showing the change from 2015 to 2024.
-2. **Policy comparison:** Capture the page comparing Korea, China, the United States, and the United Kingdom.
+다음 두 장면을 찍으면 보고서를 잘 설명할 수 있습니다.
 
-## Conclusion
+1. **한국의 PM2.5 변화:** 2015년부터 2024년까지의 농도 변화를 보여 주는 그래프를 찍습니다.
+2. **나라별 정책 비교:** 한국, 중국, 미국, 영국의 정책을 비교한 페이지를 찍습니다.
 
-The report concludes that Korea's lower PM2.5 level is best explained by several factors working together: domestic emission controls, reduced pollution from China, changes in energy and industry, and weather. It also warns against attributing the entire decline to a single policy.
+## 결론
 
-## Build Process
+한국의 PM2.5 농도 감소는 국내 배출 관리, 중국의 오염 감소, 에너지와 산업의 변화, 날씨가 함께 작용한 결과라고 볼 수 있습니다. 한 가지 정책만으로 전체 감소를 설명해서는 안 됩니다.
 
-The inquiry combines trend data with policy history and cross-country comparison. It also checks recent policy updates and clearly marks years for which confirmed annual data were not yet available.
+## 만든 과정
 
-## Next Steps
+농도 변화 자료에 정책의 역사와 나라별 비교를 더했습니다. 최근 정책도 확인했으며, 아직 연간 확정 자료가 나오지 않은 해는 결과로 단정하지 않고 따로 표시했습니다.
 
-- Compare PM2.5 with wind direction, wind speed, rainfall, and industrial activity over the same period.
-- Separate domestic and transported pollution more precisely.
-- Evaluate individual policies with a longer and more consistent dataset.
+## 다음에 할 것
+
+- 같은 기간의 풍향, 풍속, 강수량, 산업 활동과 PM2.5를 함께 비교하기
+- 국내에서 생긴 오염과 해외에서 이동한 오염을 더 정확하게 나누기
+- 더 길고 일정한 자료로 개별 정책의 효과를 분석하기

@@ -1,39 +1,40 @@
-# StudyOn
+# 스터디온
 
-A study coach that turns an exam goal into a concrete timetable, reminds the student when it is time to study, and helps review learning habits.
-[Try StudyOn on GitHub Pages](https://proben0630-creator.github.io/-/%EA%B3%B5%EB%B6%80%EB%8F%84%EC%99%80%EC%A3%BC%EB%8A%94%20%EC%95%B1.html)
+시험 목표를 구체적인 시간표로 바꾸고, 공부할 시간을 알려 주며, 학습 습관까지 점검해 주는 학습 도우미입니다.
 
-## What This Project Is
+[바로 해 보기](https://proben0630-creator.github.io/-/%EA%B3%B5%EB%B6%80%EB%8F%84%EC%99%80%EC%A3%BC%EB%8A%94%20%EC%95%B1.html)
 
-- **For whom:** Students who study without a concrete plan or do not notice problems in their study habits.
-- **When to use it:** While preparing for school exams, especially when a large exam range must be divided across the remaining days.
-- **What it can do:** Create an exam timetable, send a reminder one hour before a session, time study sessions, diagnose study habits, save mistakes for later review, and summarize progress.
+## 이 작품은
 
-## How It Works
+- **누가 쓰나:** 구체적인 계획 없이 공부하거나 자신의 공부 습관에 어떤 문제가 있는지 잘 모르는 학생이 사용합니다.
+- **어떤 상황에서 쓰나:** 중간고사나 기말고사를 준비하며 넓은 시험 범위를 남은 날짜에 나누어 공부해야 할 때 사용합니다.
+- **무엇을 할 수 있나:** 시험 공부 시간표 만들기, 공부 시작 1시간 전 알림, 공부 시간 측정, 공부 습관 진단, 오답 복습, 학습 결과 확인을 할 수 있습니다.
 
-The student enters the exam range, topic difficulty, and available days and hours. StudyOn gives harder topics more weight and assigns the topics to available time slots. It saves the plan, profile, and study records in the browser and checks the timetable to send browser notifications before a session.
+## 어떻게 돌아가나
 
-Core flow: **exam range + topic difficulty + available time → weighted timetable → reminders and timed study records → learning report**.
+시험 범위와 단원별 난이도, 공부할 수 있는 요일과 시간을 입력하면 어려운 단원에 더 높은 비중을 두어 시간표를 만듭니다. 계획과 공부 기록, 프로필은 브라우저에 저장하며, 시간표를 확인해 다음 공부가 시작되기 1시간 전에 브라우저 알림을 보냅니다.
 
-## Screens
+핵심 흐름: **시험 범위 + 단원 난이도 + 가능한 요일과 시간 → 난이도를 반영한 시간표 → 알림과 공부 시간 기록 → 학습 리포트**
 
-Two useful screenshots would be:
+## 화면
 
-1. **Exam plan and generated timetable:** Show the exam settings, topic difficulty, and resulting schedule.
-2. **Study session and learning report:** Show an active timer or completed tasks together with study time, completion rate, and subject records.
+다음 두 장면을 찍으면 작품을 잘 설명할 수 있습니다.
 
-## Conclusion
+1. **시험 계획과 완성된 시간표:** 시험 정보와 단원별 난이도를 입력한 화면, 그 결과 만들어진 시간표가 함께 보이게 찍습니다.
+2. **공부 실행과 학습 리포트:** 타이머가 작동하는 모습이나 완료한 할 일과 함께 공부 시간, 달성률, 과목별 기록이 보이게 찍습니다.
 
-StudyOn does more than give general study advice. It helps a student decide exactly what to study and when, then connects that plan to reminders, action, review, and progress tracking.
+## 결론
 
-## Build Process
+스터디온은 공부를 막연하게 도와주는 앱이 아닙니다. 학생이 무엇을 언제 공부할지 구체적으로 정하고, 알림을 받아 실제로 실행한 뒤, 복습과 학습 기록까지 이어 갈 수 있도록 만들었습니다.
 
-I noticed that students sometimes study without a concrete plan and may not realize that their study habits are ineffective. I decided that an app combining planning with habit awareness could help them study in a better way.
+## 만든 과정
 
-This project was built through vibe coding. AI helped write and refine the HTML, CSS, and JavaScript. I chose the problem, target user, overall direction, and the key idea of guiding exam preparation with a concrete timetable and reminders.
+나는 일상생활이나 학교생활에서 구체적인 계획 없이 공부하거나, 자신의 공부 습관이 나쁜지 인지하지 못하는 경우를 보았습니다. 그래서 공부 계획과 자신의 학습 습관을 함께 알 수 있는 앱이 도움이 될 것이라고 생각했습니다.
 
-## Next Steps
+이 작품은 바이브 코딩으로 만들었습니다. AI는 HTML, CSS, 자바스크립트 코드를 작성하고 다듬는 일을 도왔습니다. 나는 해결할 문제와 사용할 사람, 작품의 전체 방향을 정했고, 구체적인 시간표와 알림으로 시험공부를 도와야 한다는 핵심 기능을 정했습니다.
 
-- Improve study-time distribution for midterm and final exam schedules.
-- Make the timetable adapt more precisely when a student falls behind or finishes early.
-- Add the two recommended screenshots to this README.
+## 다음에 할 것
+
+- 중간고사와 기말고사 일정에 맞춰 공부 시간을 더 알맞게 배분하기
+- 계획보다 공부가 늦어지거나 빨리 끝났을 때 시간표를 더 정확하게 다시 조정하기
+- 위에서 정한 화면 사진 두 장을 README에 넣기

@@ -1,37 +1,38 @@
 # Climate Lens
 
-An interactive world map for exploring recent climate-related disasters, natural hazards, and official alerts.
-[Try Climate Lens on GitHub Pages](https://proben0630-creator.github.io/-/%ED%99%98%EA%B2%BD%20%EB%AC%B8%EC%A0%9C%20%EC%96%B4%EC%A9%8C%EA%B5%AC.html)
+세계의 최근 기후 재난과 자연재해, 공식 경보를 살펴볼 수 있는 대화형 지도입니다.
 
-## What This Project Is
+[바로 해 보기](https://proben0630-creator.github.io/-/%ED%99%98%EA%B2%BD%20%EB%AC%B8%EC%A0%9C%20%EC%96%B4%EC%A9%8C%EA%B5%AC.html)
 
-- **For whom:** Students and general users who want to explore recent hazards by country or city.
-- **When to use it:** When comparing disasters across regions or checking the official source behind a map event.
-- **What it can do:** Search for countries and cities, display alerts and events, show nearby hazards, compare an affected area with a country's land area, and link to official sources.
+## 이 작품은
 
-## How It Works
+- **누가 쓰나:** 국가나 도시별 최근 재난 정보를 알아보고 싶은 학생과 일반 사용자가 사용합니다.
+- **어떤 상황에서 쓰나:** 지역별 재난을 비교하거나 지도에 표시된 사건의 공식 출처를 확인할 때 사용합니다.
+- **무엇을 할 수 있나:** 국가와 도시 검색, 경보와 사건 표시, 주변 재난 확인, 피해 영향 영역과 국가 면적 비교, 공식 출처 확인을 할 수 있습니다.
 
-The page combines GDACS disaster alerts, NASA EONET events, USGS earthquake observations, World Bank country information, and Wikipedia city images. Leaflet draws the map, markers, and hazard areas. The interface clearly separates earthquake observations from climate-related indicators.
+## 어떻게 돌아가나
 
-Core flow: **official open data → normalized events and locations → map layers → country, city, and event details**.
+GDACS 재난 경보, NASA EONET 자연재해 정보, USGS 지진 관측, World Bank 국가 정보, Wikipedia 도시 사진을 함께 사용합니다. Leaflet으로 지도와 사건 위치, 재난 영향 영역을 표시하며, 지진 관측은 기후 관련 지표와 구분해 보여 줍니다.
 
-## Screens
+핵심 흐름: **공식 공개 데이터 → 사건과 위치 정보 정리 → 지도에 표시 → 국가·도시·사건별 상세 정보 제공**
 
-Two useful screenshots would be:
+## 화면
 
-1. **Global overview:** Show the world map, legend, several event markers, and the balanced event list.
-2. **Selected location:** Search for a city or select a country so its image, alerts, statistics, nearby events, and source link are visible.
+다음 두 장면을 찍으면 작품을 잘 설명할 수 있습니다.
 
-## Conclusion
+1. **세계 전체 화면:** 세계지도, 범례, 여러 사건 표시와 지역 균형 사건 목록이 함께 보이게 찍습니다.
+2. **선택한 지역 화면:** 도시를 검색하거나 국가를 선택해 사진, 경보, 통계, 주변 사건과 공식 출처가 보이게 찍습니다.
 
-Climate Lens brings several official datasets into one visual interface. It helps users move from a global pattern to a specific place while keeping the original data source available for verification.
+## 결론
 
-## Build Process
+Climate Lens는 여러 공식 데이터를 하나의 시각적인 화면에 모아 보여 줍니다. 세계 전체의 재난 흐름에서 특정 지역의 상세 정보로 이동하면서 원본 출처도 함께 확인할 수 있습니다.
 
-The finished page connects multiple public APIs with different data formats. Its code converts them into a common event structure, calculates distances and polygon areas, and updates the map and detail panel from the same selected item.
+## 만든 과정
 
-## Next Steps
+완성된 화면은 형식이 서로 다른 여러 공개 API를 연결합니다. 코드에서 데이터를 공통된 사건 형태로 정리하고, 거리와 재난 영향 영역을 계산하며, 선택한 사건에 맞춰 지도와 상세 정보 화면을 함께 바꿉니다.
 
-- Add clearer loading and fallback messages for every external data source.
-- Expand regional official-data connections.
-- Add the two recommended screenshots to this README.
+## 다음에 할 것
+
+- 외부 데이터 연결에 실패했을 때 안내 문구를 더 자세하게 만들기
+- 지역별 공식 데이터 연결을 더 늘리기
+- 위에서 정한 화면 사진 두 장을 README에 넣기

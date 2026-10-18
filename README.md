@@ -1,21 +1,21 @@
-# Project Collection
+# 작품 모음
 
-This repository brings together two web applications and three science inquiry reports. Each project has its own README with a short introduction, an explanation of how it works, suggested screenshots, conclusions, and possible next steps.
+이 저장소에는 웹앱 2개와 과학 탐구 보고서 3개가 정리되어 있습니다. 각 작품의 README에서 작품 소개, 작동 방식, 추천 화면, 결론, 만든 과정과 발전 방향을 확인할 수 있습니다.
 
-## Projects
+## 작품 목록
 
-| Project | Type | Description |
+| 작품 | 종류 | 설명 |
 | --- | --- | --- |
-| [StudyOn](projects/studyon/README.md) | Web app | Builds concrete exam study schedules, sends reminders, tracks study time, and supports habit and mistake review. |
-| [Climate Lens](projects/climate-lens/README.md) | Web app | Displays recent disasters and hazard information from official global data sources on an interactive map. |
-| [Heatwave Impact Report](projects/heatwave-impact/README.md) | Science report | Examines rising heat exposure and its effects on health and industry. |
-| [Why Has Fine Dust Decreased?](projects/fine-dust/README.md) | Science report | Investigates how Korean and international air-quality policies contributed to lower PM2.5 levels. |
-| [Can Perpetual Motion Exist?](projects/perpetual-motion/README.md) | Science report | Explains why perpetual motion is impossible and why related investment fraud can still persuade people. |
+| [스터디온](projects/studyon/README.md) | 웹앱 | 구체적인 시험 공부 시간표를 만들고, 알림과 공부 시간 기록, 습관 진단과 오답 복습을 지원합니다. |
+| [Climate Lens](projects/climate-lens/README.md) | 웹앱 | 세계의 최근 재난과 위험 정보를 공식 데이터로 받아 대화형 지도에 보여 줍니다. |
+| [폭염 피해 보고서](projects/heatwave-impact/README.md) | 과학 탐구 보고서 | 폭염 노출 증가와 건강·산업 피해의 관계를 살펴봅니다. |
+| [미세먼지는 왜 과거보다 줄었을까?](projects/fine-dust/README.md) | 과학 탐구 보고서 | 한국과 해외의 대기 정책이 초미세먼지 감소에 어떤 영향을 주었는지 알아봅니다. |
+| [무한동력은 가능할까?](projects/perpetual-motion/README.md) | 과학 탐구 보고서 | 무한동력이 불가능한 이유와 관련 사기가 사람들을 설득하는 방법을 분석합니다. |
 
-## Original Files
+## 원본 파일
 
-- [Open StudyOn](공부도와주는%20앱.html)
-- [Open Climate Lens](환경%20문제%20어쩌구.html)
-- [Read the heatwave report](폭염%20피해%20보고서.pdf)
-- [Read the fine-dust report](미세먼지.pdf)
-- [Read the perpetual-motion report](무한동력.pdf)
+- [스터디온 실행하기](공부도와주는%20앱.html)
+- [Climate Lens 실행하기](환경%20문제%20어쩌구.html)
+- [폭염 피해 보고서 읽기](폭염%20피해%20보고서.pdf)
+- [미세먼지 보고서 읽기](미세먼지.pdf)
+- [무한동력 보고서 읽기](무한동력.pdf)

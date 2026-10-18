@@ -1,37 +1,38 @@
-# Can Perpetual Motion Exist?
+# 무한동력은 가능할까?
 
-A science inquiry report explaining why perpetual motion is impossible and why people can still profit from fraudulent claims about it.
-[Read the report](../../무한동력.pdf)
+무한동력이 불가능한 이유와 관련 사기로 수익을 얻는 이유를 알아본 과학 탐구 보고서입니다.
 
-## What This Project Is
+[보고서 읽기](../../무한동력.pdf)
 
-- **For whom:** Readers learning about energy conservation, scientific evidence, and technology-related investment fraud.
-- **When to use it:** When evaluating a machine that claims to create more energy than it receives or an investment built around such a claim.
-- **What it can do:** Explain the scientific problem, analyze fraud cases, and provide questions for checking suspicious claims.
+## 이 작품은
 
-## How It Works
+- **누가 쓰나:** 에너지 보존 법칙, 과학적인 증거, 기술을 이용한 투자 사기에 관심 있는 사람이 읽습니다.
+- **어떤 상황에서 쓰나:** 입력한 에너지보다 더 많은 에너지를 만든다는 장치나 그 장치에 투자하라는 주장을 판단할 때 사용합니다.
+- **무엇을 할 수 있나:** 과학적으로 불가능한 이유를 이해하고, 실제 사기 사례와 의심스러운 주장을 확인하는 질문을 살펴볼 수 있습니다.
 
-The report uses the conservation of energy and unavoidable real-world losses to explain why a machine cannot run forever while producing useful excess energy. It then studies reported fraud cases and identifies repeated persuasion methods such as technical language, patents, large demonstrations, famous supporters, and promised profits.
+## 어떻게 돌아가나
 
-Core approach: **physical law → impossible claim → real fraud cases → persuasion pattern → verification checklist**.
+에너지 보존 법칙과 현실의 장치에서 피할 수 없는 손실을 이용해 무한동력이 불가능한 이유를 설명합니다. 그다음 실제 보도 사례를 분석해 전문 용어, 특허, 큰 시연, 유명인의 이름, 높은 수익 약속처럼 반복해서 사용된 설득 방법을 찾습니다.
 
-## Screens
+핵심 흐름: **물리 법칙 → 불가능한 주장 → 실제 사기 사례 → 설득 방법 → 확인 질문**
 
-Two useful images would be:
+## 화면
 
-1. **Scientific explanation:** Capture the page explaining energy input, output, and loss.
-2. **Fraud pattern:** Capture the case-study page and the page summarizing common persuasion methods.
+다음 두 장면을 찍으면 보고서를 잘 설명할 수 있습니다.
 
-## Conclusion
+1. **과학 원리:** 에너지의 입력, 출력과 손실을 설명하는 페이지를 찍습니다.
+2. **사기 방법:** 실제 사례와 반복되는 설득 방법을 정리한 페이지를 찍습니다.
 
-Perpetual motion is impossible because a real machine cannot produce useful energy without input while avoiding every loss. The report argues that recognizing this scientific limit is not enough: people also need to examine evidence, independent replication, and financial promises.
+## 결론
 
-## Build Process
+현실의 장치는 에너지를 넣지 않고 모든 손실을 피하면서 유용한 에너지를 계속 만들 수 없으므로 무한동력은 불가능합니다. 과학적인 한계를 아는 것뿐 아니라 증거, 다른 연구자의 재현, 투자 수익 약속을 함께 확인해야 합니다.
 
-The inquiry connects a scientific principle with social case analysis. Instead of only saying that the machines fail, it compares how fraudulent claims were presented and why those presentations could appear convincing.
+## 만든 과정
 
-## Next Steps
+과학 법칙과 사회의 실제 사례를 연결했습니다. 단순히 장치가 실패한다고 말하는 데서 끝내지 않고, 사기 주장이 어떤 모습으로 제시되었고 왜 그럴듯하게 보였는지 비교했습니다.
 
-- Analyze court decisions and investigation records in more detail.
-- Compare the language repeated across a larger number of cases.
-- Turn the verification questions into a short public checklist.
+## 다음에 할 것
+
+- 판결문과 수사 자료를 더 자세하게 분석하기
+- 더 많은 사례에서 반복되는 표현을 비교하기
+- 의심스러운 주장을 확인하는 질문을 짧은 점검표로 만들기
